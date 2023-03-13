@@ -1,0 +1,44 @@
+{fx_template 'common/header'}
+<style>
+.input-group-addon .radio-inline, .input-group-addon .checkbox-inline {
+    padding-top: 0;
+    line-height: 0.95;
+}
+.multi-img-details .multi-item{height:auto}
+</style>
+<div class="page-header">当前位置：<span class="text-primary">基础设置</span></div>
+<div class="page-content">
+<form action="" method="post" class="form-horizontal form-validate" enctype="multipart/form-data" style="" novalidate="novalidate">
+	<input type="hidden" id="tab" name="tab" value="#tab_{$tab}">
+    <div class="tabs-container">
+        <ul class="nav nav-tabs" id="myTab">
+            <li{if empty($_GPC['tab']) || $_GPC['tab']=='basic'} class="active"{/if}><a href="#tab_basic">基本</a></li>
+            <li{if $_GPC['tab']=='web'} class="active"{/if}><a href="#tab_web">商户登录</a></li>
+            <li{if $_GPC['tab']=='perm'} class="active"{/if}><a href="#tab_perm">默认权限</a></li>
+            <li{if $_GPC['tab']=='protocol'} class="active"{/if}><a href="#tab_protocol">发布协议</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane {if empty($_GPC['tab']) || $_GPC['tab']=='basic'}active{/if}" id="tab_basic">{fx_template 'merch/set/basic'}</div>
+            <div class="tab-pane {if $_GPC['tab']=='web'}active{/if}" id="tab_web">{fx_template 'merch/set/web'}</div>
+            <div class="tab-pane {if $_GPC['tab']=='perm'}active{/if}" id="tab_perm">{fx_template 'perm/merch/set'}</div>
+            <div class="tab-pane {if $_GPC['tab']=='protocol'}active{/if}" id="tab_protocol">{fx_template 'merch/set/protocol'}</div>
+    	</div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="submit" value="提交" class="btn btn-primary">
+        </div>
+    </div>
+</form>
+</div>
+<script>
+require(['bootstrap'], function () {
+	$('#myTab a').click(function (e) {
+		$('#tab').val( $(this).attr('href'));
+		e.preventDefault();
+		$(this).tab('show');
+	})
+});
+</script>
+{fx_template 'common/footer'}

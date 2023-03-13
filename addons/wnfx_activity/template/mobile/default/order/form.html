@@ -1,0 +1,28 @@
+{php $index = !empty($index) ? $index : 0}
+<?php for ($ii = $index; $ii < $formnum; $ii++) { ?>
+<div class="mui-input-group form">
+    <div class="mui-input-row mui-group-title"{if $formnum==1} style="display:none"{/if}><label>第{php echo $ii+1}位用户</label></div>
+    {fx_template 'order/form_basic'}
+    {php $key = 0;}
+    {loop $forms[0] $k $form}
+    {php $placeholder = empty($form['description']) ? $form['title'] : $form['description'];}
+    {if $form['essential']==1}
+    	{php $placeholder .= ' (必填)';}
+        {if !empty($form['fieldstype'])}
+            <input name="must" type="hidden" value="" title="{$form['title']}" data-type="{$form['fieldstype']}"/>
+        {else}
+            <input name="must" type="hidden" value="{$key}" title="{$form['title']}" data-type="{$form['displaytype']}"/>
+        {/if}
+    {/if}
+    
+    {if !empty($form['fieldstype'])}
+        {fx_template 'order/form_fields'}
+    {else}
+        {fx_template 'order/form_diy'}
+        {php $key++;}
+    {/if}
+    
+    {/loop}
+    <p></p>
+</div>
+<?php } ?>

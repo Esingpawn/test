@@ -1,0 +1,159 @@
+{template 'common/header'}
+<link href="{FX_URL}web/resource/css/common.min.css?v=20170826" rel="stylesheet">
+<link href="{FX_URL}web/resource/css/util.min.css" rel="stylesheet">
+<script type="text/javascript" src="{FX_URL}web/resource/js/util.min.js?v=20170912"></script>
+<style>
+.we7-page-title{display:block!important;border-bottom: 1px solid #ddd;font-size:14px!important;padding:0 10px 5px 0px;margin-bottom: 15px;}
+</style>
+<div class="we7-page-title">提现者信息</div>
+<div class="panel-body">
+    <div style="height:auto;width:120px;float:left;">
+        <img src="{$item['member']['avatar']}" style="width:100px;height:100px;border:1px solid #ccc;padding:1px">
+    </div>
+    <div style="float:left;height:auto;overflow: hidden">
+        <p>
+            <b>昵称: </b>{$item['member']['nickname']}
+            <b>姓名: </b>{$item['member']['realname']}
+            <b>手机号: </b>{$item['member']['mobile']}
+        </p>
+        <p><b>累计收入: </b><span style="color:red">{$item['agent']['commission_total']}</span> 元</p>
+        <p><b>提现金额: </b><span style="color:red">{$item['amounts']}</span> 元</p>
+        <p><b>收入类型: </b>{$item['type_name']}</p>
+        <p><b>提现方式: </b>{$item['pay_way_name']}</p>
+        {if $item['pay_way']== 'bank'}
+            <p>
+                <b>银行卡：</b>
+            </p>
+        {elseif $item['pay_way']== 'wechat'}
+            <p>
+                <b>微信：</b>{$item['member']['openid']}
+            </p>
+        {elseif $item['pay_way']== 'alipay'}
+            <p>
+                <b>支付宝：</b>
+            </p>
+        {/if}
+        <p><b>状态: </b>{$item['status_name']}</p>
+        <p><b>申请时间: </b>{$item['created_at']}</p>
+        {if !empty($item['audit_at'])}<p><b>审核时间: </b>{$item['audit_at']}</p>{/if}
+        {if !empty($item['pay_at'])}<p><b>打款时间: </b>{$item['pay_at']}</p>{/if}
+        {if !empty($item['arrival_at'])}<p><b>到账时间: </b>{$item['arrival_at']}</p>{/if}
+    </div>
+</div>
+<div class="we7-page-title">
+    收入提现申请信息 共计 <span style="color:red; ">{$item['income_total']}</span> 条收入
+</div>
+<form action="" method="post" class="form-horizontal">
+<input type="hidden" name="token" value="{$_W['token']}">
+<input type="hidden" name="id" value="{$id}">
+<input type="hidden" name="op" value="post">
+<div class="panel-body">
+    
+    <table class="table table-hover">
+        <thead class="navbar-inner">
+        <tr>
+            <td style="width: 200px;"></td>
+            <th>收入ID</th>
+            <th>收入类型</th>
+            <th>收入金额</th>
+            <th>收入状态</th>
+            <th>打款状态</th>
+            <th>收入时间</th>
+            <td>收入详情</td>
+        </tr>
+        </thead>
+        <tbody>
+            {loop $item['incomes'] $k=>$row}
+            <tr style="background: #eee">
+                <td>
+                {if $item['status'] != 2}
+                <label class="radio-inline"><input type="radio" name="audit[{$row['id']}]" value="1"{if $row['pay_status']!=-1 && $row['pay_status']!=3} checked="checked"{/if}> 通过</label>
+                <label class="radio-inline"><input type="radio" name="audit[{$row['id']}]" value="-1"{if $row['pay_status']==-1} checked="checked"{/if}> 无效</label>
+                <label class="radio-inline"><input type="radio" name="audit[{$row['id']}]" value="3"{if $row['pay_status']==3} checked="checked"{/if}> 驳回</label>
+                {else}
+                	{$row['pay_status_name']}
+                {/if}
+                </td>
+                <td>{$row['id']}</td>
+                <td>{$row['type_name']}</td>
+                <td>{$row['amount']}</td>
+                <td>{$row['status_name']}</td>
+                <td>{$row['pay_status_name']}</td>
+                <td>{$row['created_at']}</td>
+                <td>
+                <a class="btn btn-danger btn-sm" href="javascript:;" data-toggle="modal" data-target="#modal-refund{$k}">详情</a>
+                </td>
+            </tr>
+            <div id="modal-refund{$k}" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    	<div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                            <h3>收入信息</h3>
+                        </div>
+                        <div class="modal-body overflow-auto">
+                        	{loop $row['detail'] $kk=>$data}
+                            {if $kk=='goods'}
+                            	{php break;}
+                            {/if}
+                        	<p>{$data['title']}</p>                        
+                            <div style="background:#eee;overflow:hidden">
+                            	{loop $data['data'] $value}
+                                <div class="form-group">
+                                    <label class="col-xs-10 col-sm-3 col-md-3 control-label">{$value['title']}</label>
+                                    <div class="col-sm-9 form-control-static">{$value['value']}</div>
+                                </div>
+                                {/loop}
+                            </div>
+                            {/loop}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/loop}
+		</tbody></table>
+</div>
+<div class="we7-page-title">打款信息</div>
+<div class="panel-body" style="padding-left:0">
+{if $item['status']=='0'}
+审核金额: <span style="color:red">{$item['amounts']}</span> 元
+预计手续费: <span style="color:red">{$item['poundage']}</span> 元
+预计劳务税:<span style="color:red">{$item['servicetax']}</span> 元
+预计应打款：<span style="color:red">{php echo $item['amounts']-$item['poundage']-$item['servicetax']}</span> 元
+{else}
+审核金额: <span style='color:red'>{php echo $item['actual_amounts'] + $item['actual_poundage'] + $item['actual_servicetax']}</span> 元
+手续费: <span style='color:red'>{$item['actual_poundage']}</span> 元
+劳务税:<span style='color:red'>{$item['actual_servicetax']}</span> 元
+应打款：<span style='color:red'>{$item['actual_amounts']}</span> 元
+{/if}
+</div>
+
+<div class="form-group col-sm-12">
+	{if $item['status'] == '0'}
+        <input type="submit" name="submit_check" value="提交审核" class="btn btn-primary col-lg-1" onclick='return check()'/>
+    {/if}
+    {if $item['status'] == '1'}
+        <input type="submit" name="submit_cancel" value="重新审核" class="btn btn-default " onclick='return '/>
+        {if $item['pay_way'] == 'balance'}
+            <input type="submit" name="submit_pay" value="打款到余额" class="btn btn-primary" style='margin-left:10px;' onclick='return '/>
+        {elseif $item['pay_way'] == 'wechat'}
+            <input type="submit" name="submit_pay" value="打款到微信钱包" class="btn btn-primary" style='margin-left:10px;' onclick='return '/>
+        {elseif $item['pay_way'] == 'alipay'}
+            <input type="submit" name="submit_pay" value="打款到支付宝" class="btn btn-primary " style='margin-left:10px;' onclick='return '/>
+        {elseif $item['pay_way'] == 'bank'}
+            <input type="submit" name="submit_pay" value="打款到银行卡" class="btn btn-primary " style='margin-left:10px;' onclick='return '/>
+        {elseif $item['pay_way'] == 'manual'}
+            <input type="submit" name="submit_pay" value="手动打款" class="btn btn-primary " style='margin-left:10px;' onclick='return '/>
+        {/if}
+        <input type="submit" name="confirm_pay" value="线下确认打款" class="btn btn-success " style='margin-left:10px;' onclick="if (confirm('本打款方式需要线下打款，系统只是完成流程!') == true){return true;}return false"/>
+        <input type="submit" name="audited_rebut" value="驳回记录" class="btn btn-danger " style='margin-left:10px;' onclick="if (confirm('驳回后，需要会员重新申请提现（仅驳回审核通过提现）') == true){return true;}return false"/>
+    {/if}
+    <input type="button" class="btn btn-default" name="submit" onclick="goBack()" value="返回列表"{if $item['status']!= 2} style="margin-left:10px;"{/if}>
+</div>
+</form>
+<script type="text/javascript">
+    function goBack() {
+        window.location.href = "{php echo web_url('withdraw', array('op' => 'display'))}";
+    }
+</script>
+{fx_template 'common/2.0/footer'}

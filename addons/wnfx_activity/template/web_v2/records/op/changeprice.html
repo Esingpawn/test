@@ -1,0 +1,141 @@
+<form class="form-horizontal form-validate" action="{php echo web_url('records/op/changeprice')}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+	<input type="hidden" name="id" value="{$id}">
+	<input type="hidden" id="changeprice-orderprice" value="7">
+	<input type="hidden" id="changeprice-dispatchprice" value="0.00"> 
+	<div class="modal-dialog" style="width:800px;">
+		<div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">订单改价</h4>
+            </div>
+            <div class="modal-body">
+				<table class="table" style="table-layout:fixed">
+					<tbody><tr>
+						<th style="width:200px;">商品名称</th>
+						<th>单价</th>
+						<th>数量</th>
+						<th style="width:100px">小计</th>
+						<th>加价或减价</th>
+						<th style="display:none">运费 - <a href="javascript:;" onclick="$('#changeprice_dispatchprice').val('0');mc_calc()">免运费</a></th>
+					</tr>
+					</tbody>
+                    <tbody>
+						<tr>
+							<td style="overflow:hidden;">测试</td>
+							<td class="realprice">7.00</td>
+							<td>1</td>
+							<td>7.00</td>
+							<td valign="top"><input type="number" class="form-control changeprice_orderprice" name="changegoodsprice[3]"></td>
+							<td valign="top" rowspan="1" style="vertical-align: top;display:none">
+                            	<input type="number" class="form-control" id="changeprice_dispatchprice" value="0.00" name="changedispatchprice">
+                            </td></tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="" style="color:green">应收款</td>
+							<td colspan="" style="color:green">7.00</td>
+							<td colspan="" style="color:red">改价后价格不能小于0元</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="form-group">
+					<div class="col-xs-12 col-sm-9 col-md-8 col-lg-8">
+						<div class="form-control-static">
+
+							<b>购买者信息</b>  河北省 石家庄市 市辖区 测试 测试 18555555555<br>
+							<b>买家实付</b>： <span id="orderprice">7.00</span> + <span id="dispatchprice">0.00</span> <span id="changeprice"></span> = <span id="lastprice">7.00</span><br>
+							<b>买家实付</b> = 原价 + 运费 + 涨价或减价<br><br>
+							<b><span style="color:red">*</span>该订单最多支持99次改价，您已经修改 <span style="color:red">0</span> 次<br>
+						</b></div><b>
+					</b></div><b>
+				</b></div><b>
+            </b></div><b>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" onclick="return mc_check()">提交</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+            </div>
+        </b></div><b>
+		<script language="javascript">
+            var order_price = 0;
+            var dispatch_price = 0;
+            mc_init();
+            function mc_init() {
+                order_price = parseFloat($('#changeprice-orderprice').val());
+                dispatch_price = parseFloat($('#changeprice-dispatchprice').val());
+                $('input', $('#ajaxModal')).blur(function () {
+                    if($.isNumber($(this).val())){
+                        mc_calc();
+                    }
+                });
+            }
+        
+            function mc_calc() {
+                var change_dispatchprice = parseFloat($('#changeprice_dispatchprice').val());
+                if(!$.isNumber($('#changeprice_dispatchprice').val())){
+                     change_dispatchprice = dispatch_price;
+                }
+                var dprice = change_dispatchprice;
+                if (dprice <= 0) {
+                    dprice = 0;
+                } 
+                $('#dispatchprice').html(dprice.toFixed(2));
+         
+                var oprice = 0;
+                $('.changeprice_orderprice').each(function () { 
+                    var p = 0;
+                    if ($.trim($(this).val()) != '') {
+                        p = parseFloat($.trim($(this).val()));
+                    }
+                    oprice += p;
+                });
+                if(Math.abs(oprice)>0){
+                    if (oprice < 0) {
+                        $('#changeprice').css('color', 'red');
+                        $('#changeprice').html( " - " + Math.abs(oprice));
+                    } else {
+                        $('#changeprice').css('color', 'green');
+                        $('#changeprice').html( " + " + Math.abs(oprice));
+                    }
+                }
+                var lastprice =  order_price + dprice + oprice;
+                
+                $('#lastprice').html( lastprice.toFixed(2) );
+        
+            }
+            function mc_check(){
+                var can = true;
+                var lastprice = 0;
+                 $('.changeprice_orderprice').each(function () {
+                     if( $.trim( $(this).val())==''){
+                         return true;
+                     }
+                    var p = 0;
+                    if ( !$.isNumber($(this).val())) {
+                        $(this).select();
+                        tip.msgbox.err('请输入数字!');
+                        can =false;
+                        return false;
+                    }
+                    var val  = parseFloat( $(this).val() );
+                    if(val<=0 && Math.abs(val) > parseFloat( $(this).parent().prev().html())) {
+                        $(this).select();
+                        tip.msgbox.err('单个商品价格不能优惠到负数!');
+                        can =false;
+                        return false;
+                    }
+                    lastprice+=val;
+                });
+                var op = order_price + dispatch_price+ lastprice;
+                if( op <0){
+                    tip.msgbox.err('订单价格不能小于0元!');
+                    return false;
+                }
+                if(!can){
+                    return false;
+                }
+                return true;
+            }
+        </script>
+        </b>
+</div>
+</form>
+<!--蜗牛科技-->

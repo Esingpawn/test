@@ -1,0 +1,25 @@
+<form class="form-horizontal form-validate" action="{php echo web_url('records/op/refund')}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+   <input type="hidden" name="id" value="{$id}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">退款处理</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="form-group">
+					<div style=" padding:0 20px;">
+						<label class="radio-inline"><input type="radio" name="value" value="1" checked> 通过</label>
+                        <label class="radio-inline"><input type="radio" name="value" value="2"> 驳回</label>
+					</div>
+				</div>
+                <textarea style="height:150px;" class="form-control" name="remark" placeholder="商家备注">{$item['remark']}</textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">提交</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+            </div>
+        </div>
+    </div>
+</form>
+<!--蜗牛科技-->

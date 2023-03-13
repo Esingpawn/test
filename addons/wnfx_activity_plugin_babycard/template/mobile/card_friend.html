@@ -1,0 +1,144 @@
+{fx_template 'common/header'}
+<style>
+.mui-input-group .mui-input-row{background-color:#fff!important;height:42px;}
+.mui-help.mui-checkbox label, .mui-help.mui-radio label{padding-left:35px;width:50%;}
+.mui-help.mui-checkbox.mui-left input[type=checkbox], .mui-help.mui-radio.mui-left input[type=radio]{left:5px;height:25px;width:50%;}
+.mui-help.mui-checkbox input[type=checkbox]:before, .mui-help.mui-radio input[type=radio]:before{font-size:25px;}
+.mui-help .mui-help-info{line-height:1.8;text-align:right;padding-right:15px!important;width:50%!important;}
+.mui-popover .mui-popover-content{height:94.5%;}
+.mui-popover .mui-table-view-cell .mui-badge{padding:0;margin:0;}
+.mui-popover .mui-table-view-cell.avatar{line-height:40px;}
+.mui-popover .mui-table-view-cell.avatar .upload-btn{position: absolute;top: 0;height: 100%;width: 100%;left: 0;}
+.mui-popover .mui-table-view-cell.avatar .upload-btn div{ width:100%!important; height:100%!important;}
+.mui-popover .mui-table-view-cell.avatar .head-img{margin-right: 20px;border-radius:10%;vertical-align: middle;}
+.mui-popup-backdrop{ z-index:9999;}
+.mui-poppicker{ z-index:9999;}
+.mui-poppicker~.mui-backdrop,.mui-dtpicker~.mui-backdrop{z-index:9998;}
+</style>
+    <div class="mui-content" style="z-index:1">
+    	 {if $config['friend_enable'] || $config['friend_enable']==''}
+    	<ul class="mui-table-view mui-table-view-chevron mui-afterbefore-no">
+            <li class="mui-table-view-cell mui-media">
+                <a class="mui-navigate-right js-popover" data-popover='friend_add'>
+                    <div class="mui-media-body">
+                        <p class="mui-text-rmb" style="margin-bottom:5px; font-size:16px;">+添加亲友</p>
+                        <span class="mui-ellipsis">您可以添加亲友资料选择</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        {/if}
+        <p></p>
+        <div class="mui-input-group">
+            <div class="mui-input-row mui-checkbox mui-left mui-help">
+                <label>默认自己</label>
+                <input name="fid" value="0" type="checkbox">
+                {if $tobuy}
+                <div class="mui-help-info {if TIMESTAMP > $my_record['end_time']}mui-text-orange{else}mui-text-success{/if}">{if TIMESTAMP > $my_record['end_time']}已到期{else}有效期{/if} {php echo date('y年m月d H:i', $my_record['end_time'])}</div>
+                {else}
+                <div class="mui-help-info mui-text-orange">未开通</div>
+                {/if}
+            </div>
+            {loop $friend $key $item}
+            <div class="mui-input-row mui-checkbox mui-left mui-help">
+                <label>{$item['realname']}</label>
+                <input name="fid" value="{$item['id']}" type="checkbox">
+                {if $item['record']['status']}
+                <div class="mui-help-info {if TIMESTAMP >  $item['record']['end_time']}mui-text-orange{else}mui-text-success{/if}">{if TIMESTAMP >  $item['record']['end_time']}已到期{else}有效期{/if} {php echo date('y年m月d H:i', $item['record']['end_time'])}</div>
+                {else}
+                <div class="mui-help-info mui-text-orange">未开通</div>
+                {/if}
+            </div>
+            {/loop}
+        </div>
+        {if $_GPC['op']!='buylist'}
+        <div class="mui-content-padded" style="padding-top:10px;">
+			<a href="{php echo app_url('member','','wnfx_activity')}" class="mui-btn mui-btn-success mui-btn-block js-wechat-pay">返回个人中心</a>
+		</div>
+        {/if}
+    </div>
+    
+    <div id="friend_add" class="mui-popover mui-popover-left">
+        <div class="mui-popover-header">添加亲友<a href="#friend_add" class="mui-pull-right mui-popover-close"><me class="mui-icon mui-icon-closeempty"></me></a></div>
+        <div class="mui-popover-content">
+            <div class="mui-scroll-wrapper">
+                <div class="mui-scroll">
+                	<div class="mui-input-group js-friend-add">
+                    	<form id='form1' action="" method="post">
+                        <div class="mui-input-row">
+                            <label>姓名</label>
+                            <input type="text" name="friend[realname]" placeholder="姓名 (必填)" value="">
+                        </div>
+                        <div class="mui-input-row">
+                            <label>直属关系</label>
+                            <input type="text" name="friend[relation]" placeholder="例如：女儿 (必填)" value="">
+                        </div>
+                        <div class="mui-input-row">
+                        	 <label>性别</label>
+            				{php echo tpl_app_fans_form('gender', '');}
+                        </div>
+                        <div class="mui-input-row">
+                        	 <label>出生日期</label>
+            				{php echo tpl_app_fans_form('birth', array('year' => '1900', 'month' => '01', 'day' => '01'));}
+                        </div>
+                        </form>
+                    </div>
+                    <div class="mui-content-padded" style="padding-top:10px;">
+                        <button class="mui-btn mui-btn-success mui-btn-block" onclick="checkSubmit()" value="提交" name="submit">确认添加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<script>
+		mui('.mui-scroll-wrapper').scroll({indicators: false});
+		$(".js-popover").on('click',function(e) {
+			var popover = "#"+$(this).data("popover");
+			mui(popover).popover('toggle');
+		});
+		$(".mui-checkbox").on('click',function(e) {
+			$(this).find("input[name^='fid']").prop("checked", true);
+			util.program.navigate("{php echo app_url('card')}&fid="+$(this).find("input[name^='fid']").val());
+		});
+		
+		function checkSubmit() {
+			var obj = '.js-friend-add';
+			
+			if ($.trim($(obj).find("input[name^='friend[realname]']").val()) == '') {
+				util.alert('请输入姓名', ' ', function() {
+					$(obj).find("input[name^='friend[realname]']").focus();
+				});
+				return false;
+			}
+			if ($.trim($(obj).find("input[name^='friend[relation]']").val()) == '') {
+				util.alert('请输入直属关系', ' ', function() {
+					$(obj).find("input[name^='friend[relation]']").focus();
+				});
+				return false;
+			}
+			if ($(obj).find("input[name^='gender']").val()=='') {
+				util.alert("选择性别", ' ', function() {
+					$(".mui-gender-picker").trigger('tap');
+				});
+				return false;
+			}
+			if ($(obj).find("input[name^='birth[year]']").val()=='0') {
+				util.alert("选择生日", ' ', function() {
+					$("input[name^='birth']").trigger('tap');
+				});
+				return false;
+			}
+			
+			$.getJSON("{php echo app_url('cardfriend', array('op' => 'add'))}",$("#form1").serialize(),
+				function(data){
+					if (!data.message.errno){
+						util.tips(data.message.message);
+						setTimeout(function(e) {location.reload()},100);
+					}else{
+						util.tips(data.message.message);
+					}
+				}
+			);
+		}
+	</script>
+{fx_template 'common/footer'}

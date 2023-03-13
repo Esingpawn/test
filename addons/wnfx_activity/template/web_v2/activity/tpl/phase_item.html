@@ -1,0 +1,42 @@
+{if !empty($spec['id'])}
+<div class="table-row spec_item">
+    <div class="goods-des">
+    	<input type="hidden" name="option_title_{$specitem['id']}[]" value="{$option[$key]['title']}">
+        <input type="text" name="spec_item_title_{$spec['id']}[]" id="title_{$specitem['id']}" class="form-control title" value="{$specitem['title']}" placeholder="{$specitem['placeholder']}" data-parent="#title_{$specitem['id']}" data-rule-required="true">
+    </div>                        
+    <div class="list-inner columnFlex">
+        <input type="text" name="option_marketprice_{$specitem['id']}[]" class="form-control" value="{php echo $option[$key]['marketprice']>0?$option[$key]['marketprice']:0}" id="price_{$specitem['id']}" data-rule-required="true" data-parent="#price_{$specitem['id']}">
+    </div>
+    <div class="list-inner columnFlex">
+        <input type="text" name="option_costprice_{$specitem['id']}[]" class="form-control" value="{$option[$key]['costprice']}" placeholder="不填则无会员价">
+    </div>
+    <div class="list-inner columnFlex">
+        <input type="text" name="option_stock_{$specitem['id']}[]" class="form-control" value="{$option[$key]['stock']}" placeholder="不填则无限制">
+    </div>
+    <div class="list-inner columnFlex ops">
+        <input type="hidden" name="spec_item_show_{$spec['id']}[]" value="1">
+        <input type="hidden" name="spec_item_id_{$spec['id']}[]" value="{$specitem['id']}">        
+        <input type="hidden" name="option_id_{$specitem['id']}[]" value="{$option[$key]['id']}">
+        <input type="hidden" name="option_ids[]" value="{$specitem['id']}">
+        <a class="op text{php echo count($spec['items'])==1?' disabled':''}" onclick="delSpecItem(this)"><i class="icow icow-shanchu1"></i></a>
+    </div>
+</div>
+{else}
+<div class="table-row spec_item">
+    <div class="goods-des">
+        <input type="text" name="spec_item_title[]" id="title_{$_GPC['key']}" class="form-control" value="" placeholder="{$specitem['placeholder']}" data-parent="#title_{$_GPC['key']}" data-rule-required="true">
+    </div>                        
+    <div class="list-inner columnFlex">
+        <input type="text" name="option_marketprice[]" id="price_{$_GPC['key']}" class="form-control" value="0" data-parent="#price_{$_GPC['key']}" data-rule-required="true">
+    </div>
+    <div class="list-inner columnFlex">
+        <input type="text" name="option_costprice[]" class="form-control" value="" placeholder="不填则无会员价">
+    </div>
+    <div class="list-inner columnFlex">
+        <input type="text" name="option_stock[]" class="form-control" value="" placeholder="不填则无限制">
+    </div>
+    <div class="list-inner columnFlex ops">
+        <a class="op text" onclick="delSpecItem(this)"><i class="icow icow-shanchu1"></i></a>
+    </div>
+</div>
+{/if}

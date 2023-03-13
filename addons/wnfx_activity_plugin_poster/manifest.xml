@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns="http://www.we7.cc" versionCode="0.8,1.0">
+
+	<application setting="true">
+		<name><![CDATA[嗨逗汇订票分销海报01]]></name>
+		<identifie><![CDATA[wnfx_activity_plugin_poster]]></identifie>
+		<version><![CDATA[1.1.25]]></version>
+		<type><![CDATA[activity]]></type>
+		<ability><![CDATA[嗨逗汇订票海报]]></ability>
+		<description><![CDATA[嗨逗汇订票系统，海报插件，分销]]></description>
+		<author><![CDATA[微擎]]></author>
+		<url><![CDATA[http://www.we7.cc/]]></url>
+	</application>
+
+	<platform>
+		<subscribes>
+		</subscribes>
+
+		<handles>
+		</handles>
+
+		<rule embed="false" /> 
+		<card embed="false" />
+		<oauth type="1" />
+		
+		<supports>
+			<item type="wxapp" />
+			<item type="app" />
+		</supports>
+		<plugin-main name="wnfx_activity" />
+	</platform>
+
+	<bindings>
+		<cover>
+			<entry title="推广中心" do="commission" state="" direct="false"/>
+		</cover>
+		<menu>
+			<entry title="海报管理" do="poster" state="" direct="false"/>
+			<entry title="分销商管理" do="agent" state="" direct="false"/>
+			<entry title="分销订单管理" do="order" state="" direct="false"/>
+			<entry title="收入明细" do="income" state="" direct="false"/>
+			<entry title="提现记录" do="withdraw" state="" direct="false"/>
+		</menu>
+	</bindings>
+
+	<permissions>
+	</permissions>
+
+	<install><![CDATA[]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[ru_rpgrade.php]]></upgrade>
+
+</manifest>

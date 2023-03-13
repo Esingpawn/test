@@ -1,0 +1,182 @@
+<?php defined('IN_IA') or exit('Access Denied');?><?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/header', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/header', TEMPLATE_INCLUDEPATH));?>
+<style type='text/css'>
+tbody tr td{position:relative}
+tbody tr .icow-weibiaoti--{visibility:hidden;display:inline-block;color:#fff;height:18px;width:18px;background:#e0e0e0;text-align:center;line-height:18px;vertical-align:middle}
+tbody tr:hover .icow-weibiaoti--{visibility:visible}
+tbody tr .icow-weibiaoti--.hidden{visibility:hidden!important}
+.full .icow-weibiaoti--{margin-left:10px}
+.full>span{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;vertical-align:middle;align-items:center}
+</style>
+<div class="page-header">当前位置：<span class="text-primary">幻灯片管理</span></div>
+
+<div class="page-content">
+	<form action="./index.php" method="get" class="form-horizontal form-search" role="form">
+        <input type="hidden" name="c" value="site">
+        <input type="hidden" name="a" value="entry">
+        <input type="hidden" name="m" value="<?php echo IN_MODULE;?>">
+        <input type="hidden" name="do" value="web">
+        <input type="hidden" name="r" value="shop.adv">
+        <div class="page-toolbar">
+            <div class="pull-left">
+                <a class="btn btn-primary btn-sm" href="<?php  echo web_url('shop/adv/add')?>"><i class="fa fa-plus"></i> 添加幻灯片</a>
+            </div>
+            <div class="pull-right col-sm-6">
+                <div class="input-group">
+                    <div class="input-group-select">
+                        <select name="enabled" class="form-control">
+                            <option value=""<?php  if($_GPC['enabled']=='') { ?> selected<?php  } ?>>状态</option>
+                            <option value="1"<?php  if($_GPC['enabled']==1) { ?> selected<?php  } ?>>显示</option>
+                            <option value="0"<?php  if($_GPC['enabled']=='0') { ?> selected<?php  } ?>>隐藏</option>
+                        </select>
+                    </div>
+                    <input type="text" class="form-control" name="keyword" value="<?php  echo $keyword;?>" placeholder="请输入关键词">
+                    <span class="input-group-btn"><button class="btn btn-primary" type="submit">搜索</button></span>
+                </div>
+            </div>
+        </div>
+    </form>
+	<form action="" method="post">
+		<div class="page-table-header">
+			<input type="checkbox">
+			<div class="btn-group">
+				<button class="btn btn-default btn-sm btn-operation" type="button" data-toggle="batch" data-href="<?php  echo web_url('shop/adv/enabled',array('enabled'=>1))?>"><i class="icow icow-xianshi"></i> 显示</button>
+                <button class="btn btn-default btn-sm btn-operation" type="button" data-toggle="batch" data-href="<?php  echo web_url('shop/adv/enabled',array('enabled'=>0))?>"><i class="icow icow-yincang"></i> 隐藏</button>
+                <?php  if(perm('shop.adv.delete')) { ?>
+                <button class="btn btn-default btn-sm btn-operation" type="button" data-toggle="batch-remove" data-confirm="确认要删除?" data-href="<?php  echo web_url('shop/adv/delete')?>"><i class="icow icow-shanchu1"></i> 删除</button>
+                <?php  } ?>
+			</div>
+		</div>
+		<table class="table table-responsive table-hover">
+		<thead class="navbar-inner">
+		<tr>
+			<th style="width:25px"></th>
+			<th style="width:80px">顺序</th>
+            <th style="width:80px">图片</th>
+			<th style="width:180px">标题</th>
+			<th>链接</th>
+            <th style="width:60px">显示</th>
+            <th style="width:65px">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+        <?php  if(is_array($list)) { foreach($list as $row) { ?>
+		<tr>
+			<td>
+				<input type="checkbox" value="<?php  echo $row['id'];?>">
+			</td>
+			<td>
+				<a href="javascript:;" data-toggle="ajaxEdit" data-href="<?php  echo web_url('shop/adv/displayorder',array('id'=>$row['id']))?>"><?php  echo $row['displayorder'];?></a><i class="icow icow-weibiaoti--" data-toggle="ajaxEdit2"></i>
+			</td>
+            <td>
+                <img src="<?php  echo tomedia($row['thumb'])?>" style="width:72px;padding:1px;border:1px solid #efefef;margin:7px 0" onerror="this.src='<?php echo FX_BASE;?>web/resource_v2/images/nopic.png'">
+            </td>
+			<td><?php  echo $row['advname'];?></td>
+			<td><?php  if(!empty($row['link'])) { ?><p>H5：<?php  echo $row['link'];?></p><?php  } ?><?php  if(!empty($row['applink'])) { ?><p>小程序：<?php  echo $row['applink'];?></p><?php  } ?></td>
+			<td>
+				<span class="label <?php  if($row['enabled']) { ?>label-primary<?php  } else { ?>label-default<?php  } ?>"
+                	data-toggle="ajaxSwitch"
+                    data-switch-value="<?php  echo $row['enabled'];?>"
+                    data-switch-value0="0|隐藏|label label-default|<?php  echo web_url('shop/adv/enabled',array('enabled'=>1,'id'=>$row['id']))?>"
+                    data-switch-value1="1|显示|label label-primary|<?php  echo web_url('shop/adv/enabled',array('enabled'=>0,'id'=>$row['id']))?>">
+                    <?php echo $row['enabled']?'显示':'隐藏'?>
+                </span>
+			</td>
+			<td style="text-align:left">
+				<a href="<?php  echo web_url('shop/adv/edit',array('id'=>$row['id']))?>" class="btn btn-op btn-operation"><span data-toggle="tooltip" data-placement="top" data-original-title="修改"><i class="icow icow-bianji2"></i></span></a>
+                <?php  if(perm('shop.adv.delete')) { ?>
+                <a data-toggle="ajaxRemove" href="<?php  echo web_url('shop/adv/delete',array('id'=>$row['id']))?>" class="btn btn-op btn-operation" data-confirm="确认要删除此幻灯片吗?"><span data-toggle="tooltip" data-placement="top" data-original-title="删除"><i class="icow icow-shanchu1"></i></span></a>
+                <?php  } ?>
+			</td>
+		</tr>
+        <?php  } } ?>
+		</tbody>
+		<tfoot>
+		<tr>
+			<td>
+				<input type="checkbox">
+			</td>
+			<td colspan="4">
+				<div class="btn-group">
+					<button class="btn btn-default btn-sm btn-operation" type="button" data-toggle="batch" data-href="<?php  echo web_url('shop/adv/enabled',array('enabled'=>1))?>"><i class="icow icow-xianshi"></i> 显示</button>
+                    <button class="btn btn-default btn-sm btn-operation" type="button" data-toggle="batch" data-href="<?php  echo web_url('shop/adv/enabled',array('enabled'=>0))?>"><i class="icow icow-yincang"></i> 隐藏</button>
+                    <?php  if(perm('shop.adv.delete')) { ?>
+                    <button class="btn btn-default btn-sm btn-operation" type="button" data-toggle="batch-remove" data-confirm="确认要删除?" data-href="<?php  echo web_url('shop/adv/delete')?>"><i class="icow icow-shanchu1"></i> 删除</button>
+                    <?php  } ?>
+				</div>
+			</td>
+			<td colspan="2" style="text-align:right">
+				<?php  echo $pager;?>
+			</td>
+		</tr>
+		</tfoot>
+		</table>
+	</form>
+</div><br />
+<script>
+$(document).on("click", '[data-toggle="ajaxEdit2"]', function (e) {
+	var _this = $(this)
+	$(this).addClass('hidden')
+	var obj = $(this).parent().find('a'),
+		url = obj.data('href') || obj.attr('href'),
+		data = obj.data('set') || {},
+		html = $.trim(obj.text()),
+		required = obj.data('required') || true,
+		edit = obj.data('edit') || 'input';
+	var oldval = $.trim($(this).text());
+	e.preventDefault();
+
+	submit = function () {
+		e.preventDefault();
+		var val = $.trim(input.val());
+		if (required) {
+			if (val == '') {
+				tip.msgbox.err(tip.lang.empty);
+				return;
+			}
+		}
+		if (val == html) {
+			input.remove(), obj.html(val).show();
+			//obj.closest('tr').find('.icow').css({visibility:'visible'})
+			return;
+		}
+		if (url) {
+			$.post(url, {
+				value: val
+			}, function (ret) {
+				ret = eval("(" + ret + ")");
+				if (ret.status == 1) {
+					obj.html(val).show();
+				} else {
+					tip.msgbox.err(ret.result.message, ret.result.url);
+				}
+				input.remove();
+			}).fail(function () {
+				input.remove(), tip.msgbox.err(tip.lang.exception);
+			});
+		} else {
+			input.remove();
+			obj.html(val).show();
+		}
+		obj.trigger('valueChange', [val, oldval]);
+	},
+		obj.hide().html('<i class="fa fa-spinner fa-spin"></i>');
+	var input = $('<input type="text" class="form-control input-sm" style="width: 80%;display: inline;" />');
+	if (edit == 'textarea') {
+		input = $('<textarea type="text" class="form-control" style="resize:none;" rows=3 width="100%" ></textarea>');
+	}
+	obj.after(input);
+
+	input.val(html).select().blur(function () {
+		submit(input);
+		_this.removeClass('hidden')
+
+	}).keypress(function (e) {
+		if (e.which == 13) {
+			submit(input);
+			_this.removeClass('hidden')
+		}
+	});
+
+})
+</script>
+<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/footer', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/footer', TEMPLATE_INCLUDEPATH));?>

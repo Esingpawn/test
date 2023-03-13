@@ -1,0 +1,51 @@
+{if MERCHANTID}
+{fx_template 'common/header'}
+{else}
+{template 'common/2.0/header'}
+{/if}
+<link href="{FX_URL}web/resource/css/util.min.css" rel="stylesheet">
+<script type="text/javascript" src="{FX_URL}web/resource/js/util.min.js?v=20170912"></script>
+<link href="{FX_URL}web/resource/components/select2/select2.min.css" rel="stylesheet">
+<style>
+.we7-page-title{display:block!important;border-bottom: 1px solid #ddd;font-size:14px!important;padding:0 10px 5px 0px;margin-bottom: 15px;}
+.material-appmsg-item .appmsg-thumb{width:160px; margin:auto}
+.material-appmsg-item{ width:230px}
+.appmsg-desc{text-align:center;color:#999;margin:0 15px;white-space:normal!important;line-height:1.5;padding:0;font-size:50%}
+</style>
+<div class="form-files-box">
+    <div class="form-file header">相关二维码</div>
+    <div class="material-appmsg-list" style="height:1401px;margin-left:0;margin-right:0">
+    	{loop $qrcode $item}
+		<div class="material-appmsg-item" style="position:absolute;top:0px;left:0px;">
+            <div class="appmsg-content">
+                <div class="appmsg-info">
+                    <em class="appmsg-date">{$item['name']}</em>
+                    <i class="wi wi-qrcode pull-right" style="font-size:20px;"></i>
+				</div>
+                <div class="appmsg-item">
+                    <h4 class="appmsg-title">
+                        <a href="" target="-blank"></a>
+                    </h4>
+                    <div class="appmsg-thumb" style="background-image:url('{php echo tomedia($item['qr'])}')"></div>
+                    <p class="appmsg-desc">{$item['desc']}</p>
+                </div>
+            </div>
+            <div class="appmsg-opr">
+                <ul>
+                    <li class="appmsg-opr-item">
+                    	<a href="javascript:;" data-clipboard-text="{$item['url']}" data-url="{$item['url']}" class="js-clip" title="复制链接">复制链接</a>
+                    </li>
+                    <li class="appmsg-opr-item">
+                    	<a href="{php echo web_url('activity/url2qr/down_qr',array('id'=>$id,'name'=>$item['name']))}">下载</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {/loop}
+    </div>
+</div>
+{if MERCHANTID}
+{fx_template 'common/footer'}
+{else}
+{fx_template 'common/2.0/footer-a'}
+{/if}

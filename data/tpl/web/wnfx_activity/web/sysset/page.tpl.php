@@ -1,0 +1,189 @@
+<?php defined('IN_IA') or exit('Access Denied');?><?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/header', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/header', TEMPLATE_INCLUDEPATH));?>
+<style>
+.input-group-addon .radio-inline, .input-group-addon .checkbox-inline {
+    padding-top: 0;
+    line-height: 0.95;
+}
+.multi-img-details .multi-item{height:auto}
+</style>
+<div class="page-header">当前位置：<span class="text-primary">WAP设置</span></div>
+<div class="page-content">
+<form action="" method="post" class="form-horizontal form-validate" enctype="multipart/form-data" style="" novalidate="novalidate">
+	<div class="form-group-title">基本设置</div>
+    <div class="form-group">
+        <label class="col-lg control-label">活动列表</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[sys][waterfall]" value="0" <?php  if($settings['sys']['waterfall']==0) { ?>checked="checked"<?php  } ?>> 普通
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[sys][waterfall]" value="1" <?php  if($settings['sys']['waterfall']==1) { ?>checked="checked"<?php  } ?>> 瀑布流
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">开启搜索</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[search]" value="1" <?php  if($settings['search']==1 || $settings['search']=='') { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[search]" value="0" <?php  if($settings['search']=='0') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>    
+    <div class="form-group">
+        <label class="col-lg control-label">购买标题</label>
+        <div class="col-sm-9 col-xs-12">
+        	<input type="text" name="module[buytitle]" class="form-control" value="<?php  echo $settings['buytitle'];?>" placeholder="默认：报名，你可以填写【如：预约】">
+        </div>
+    </div>
+    
+    <div class="form-group-title">导航设置</div>
+    <div class="form-group">
+        <label class="col-lg control-label">底部导航</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[navswitch]" value="1" <?php  if($settings['navswitch']==1 || $settings['navswitch']=='') { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[navswitch]" value="0" <?php  if($settings['navswitch']=='0') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">首页显示</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[homeswitch]" value="1" <?php  if($settings['homeswitch']==1 || $settings['homeswitch']=='') { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[homeswitch]" value="0" <?php  if($settings['homeswitch']=='0') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    
+	<div class="form-group-title">首页设置</div>
+	<div class="form-group">
+        <label class="col-lg control-label">分类布局</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[caterow]" value="0" <?php  if(!$settings['caterow']) { ?>checked="checked"<?php  } ?>> 单排
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[caterow]" value="1" <?php  if($settings['caterow']) { ?>checked="checked"<?php  } ?>> 双排
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">精选区域</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[home][recom]" value="1" <?php  if($settings['home']['recom']==1) { ?>checked="checked"<?php  } ?>> 单排
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[home][recom]" value="3" <?php  if($settings['home']['recom']==3 || empty($settings['home']['recom'])) { ?>checked="checked"<?php  } ?>> 双排
+            </label>
+        </div>
+    </div>       
+    
+    <div class="form-group-title">详情页面</div>
+    <div class="form-group">
+        <label class="col-lg control-label">倒计时</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[countdown]" value="1" <?php  if($settings['countdown'] || $settings['countdown']=='') { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[countdown]" value="0" <?php  if($settings['countdown']=='0') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">个人中心</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[fbtn]" value="1" <?php  if($settings['fbtn'] || $settings['fbtn']=='') { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[fbtn]" value="0" <?php  if($settings['fbtn']=='0') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">首页按钮</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[homebtn]" value="1" <?php  if($settings['homebtn'] || $settings['homebtn']=='') { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[homebtn]" value="0" <?php  if($settings['homebtn']=='0') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+            <div class="input-group" style="margin-top:15px;">
+                <span class="input-group-addon">跳转连接</span>
+                <input type="text" name="module[homeurl]" class="form-control" value="<?php  echo $settings['homeurl'];?>">
+            </div>
+        </div>
+    </div>
+    <div class="form-group" style="display:none">
+        <label class="col-lg control-label">抢购标语</label>
+        <div class="col-sm-9 col-xs-12">
+            <div class="input-group">
+                <input type="text" name="module[slogan]" class="form-control" value="<?php  echo $settings['slogan'];?>" placeholder="默认：大牌快抢">
+                <span class="input-group-addon">最多4个字</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">客服设置</label>
+        <div class="col-sm-9 col-xs-12 js-kefu">
+            <label class="checkbox-inline">
+                <input type="checkbox" name="module[kefu][switch]" value="1" name="switchCheck" <?php  if($settings['kefu']['switch']) { ?>checked<?php  } ?> onclick='if($(this).get(0).checked){$("#kefu").show()}else{$("#kefu").hide()}' /> 开启
+            </label>
+            <div class="help-block">
+                客服优先级：内部设置 &gt; 主办方 &gt; 平台。
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="kefu"<?php  if($settings['kefu']['switch']!=1) { ?> style="display:none"<?php  } ?>>
+        <label class="col-lg control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" value="1" name="module[kefu][type]" <?php  if($settings['kefu']['type']=='1' || $settings['kefu']['type']=='') { ?>checked="checked"<?php  } ?>> 微信二维码
+            </label>
+            <label class="radio-inline">
+                <input type="radio" value="2" name="module[kefu][type]" <?php  if($settings['kefu']['type']=='2') { ?>checked="checked"<?php  } ?>> 第三方入口
+            </label>
+            <div class="kefu-item" style="margin-top:15px;<?php  if($settings['kefu']['type']=='2') { ?>display:none<?php  } ?>">
+                <?php  echo tpl_form_field_image('module[kefu][qrcode]', $settings['kefu']['qrcode']);?>
+                <span class="help-block">建议640×870像素</span>
+            </div>
+            <div class="input-group kefu-item" style="margin-top:15px;<?php  if($settings['kefu']['type']!='2') { ?>display:none<?php  } ?>">
+                <span class="input-group-addon">入口连接</span>
+                <input type="text" name="module[kefu][url]" class="form-control" value="<?php  echo $settings['kefu']['url'];?>">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="submit" value="提交" class="btn btn-primary">
+        </div>
+    </div>
+</form>
+</div>
+<script>
+$(function () {
+	$(":radio[name='module[kefu][type]']").click(function(){
+		var obj = $(this);
+		if (obj.val()!='2'){
+			$(".kefu-item").eq(0).show();
+			$(".kefu-item").eq(1).hide();
+		}else{
+			$(".kefu-item").eq(0).hide();
+			$(".kefu-item").eq(1).show();				
+		}
+	});		
+});
+</script>
+<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/footer', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/footer', TEMPLATE_INCLUDEPATH));?>

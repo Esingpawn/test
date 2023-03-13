@@ -1,0 +1,284 @@
+<?php defined('IN_IA') or exit('Access Denied');?><div class="region-activity-details row">	
+    <div class="region-activity-left col-sm-2">填写模式</div>
+    <div class=" region-activity-right col-sm-10">
+        <label class="radio-inline">
+            <input type="radio" name="activity[switch][form]" value="0" <?php  if(!$item['switch']['form']) { ?> checked<?php  } ?>> 单用户
+        </label>      
+        <label class="radio-inline">
+            <input type="radio" name="activity[switch][form]" value="1" <?php  if($item['switch']['form']) { ?> checked<?php  } ?>> 多用户
+        </label>
+        <div class="help-block">选择多用户，用户在单次购买多张电子票时，可以为每个用户填写信息。</div>                                	
+    </div>
+</div>
+<div class="region-activity-details row">
+    <div class="region-activity-left col-sm-2">自定义表单</div>
+    <div class="region-activity-right col-sm-10">
+		<style type="text/css">
+            .formtable td,.formtable th {border:1px solid #ccc; vertical-align: middle;text-align:center;}
+            .formtable th { font-weight: bold;}
+            .formtableinput { text-align: center;}
+            .f {border-color: #b94a48;-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);}
+            .table.table-bordered tr th,.table.table-bordered tr td{overflow:hidden; text-overflow:ellipsis;}
+            .input-group-addon .radio-inline, .input-group-addon .checkbox-inline{padding-top:0; line-height:0.95;}
+            .alert-new{ padding-left:0;padding-right:0;}
+            .add-formitem.btn-default { background:#e6e6e6; color:#ccc;}
+            .form-group-btn .list-group{ margin-right:-10px;}
+            .form-group-btn .list-group .list-group-item{display:inline-block;margin:0 5px 5px 0;border-radius:0; text-align:center;}
+            .form-group-btn .list-group .list-group-item{width:30%;}
+            .form-group-btn .list-group:nth-child(4) .list-group-item{width:46.333%;}
+            .sysform-group .input-group .form-control,.diyform-group .input-group .form-control{color:#555!important;}
+            .form_item.ui-sortable-placeholder{padding:15px;margin-right: -15px;margin-left: -15px;opacity:0}
+            .form_item{border:1px dashed transparent;}
+            .form_item:hover{border:1px dashed #cecece!important;visibility:visible!important;background:#f4f9fe}
+			.form_item_item{overflow:hidden}
+        </style>
+        <div id='tboption'>
+        	<div class="alert alert-danger">
+            	1. 多用户模式：在单次报名多个名额时，支持填写每个用户的信息<br/>
+                2. 拖动鼠标覆盖表单产生的阴影处，可调整表单显示顺序<br/>
+                3. 常用报名项，可以同步到系统会员字段中，名称可自行修改，但不可变更类型。【注：借用权限不暂不支持会员字段同步】
+            </div>
+            
+            <div class="col-sm-8">
+                <div class="sysform-group">              	
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-12 col-lg-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" <?php  if($sysform['realname']['show']!='0') { ?>checked<?php  } ?> value="1" onclick="showItem(this);">显示
+                                        <input type="hidden" class="form_item_show" name="activity[form][realname][show]" VALUE="<?php echo $sysform['realname']['show']!='0'?1:0;?>" />
+                                    </label>
+                                </span>
+                                <input name="activity[form][realname][title]" type="text" class="form-control" value="<?php echo !empty($sysform['realname']['title'])?$sysform['realname']['title']:'姓名';?>" placeholder="姓名">
+                                <span class="input-group-addon">
+                                <label class="checkbox-inline">
+                                    <input name="activity[form][realname][need]" value="1" type="hidden">
+                                    <input type="checkbox" checked="" value="1" disabled="true">必填
+                                </label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-12 col-lg-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" <?php  if($sysform['mobile']['show']!='0') { ?>checked<?php  } ?> value="1" onclick='showItem(this)'>显示
+                                        <input type="hidden" class="form_item_show" name="activity[form][mobile][show]" VALUE="<?php echo $sysform['mobile']['show']!='0'?1:0;?>" />
+                                    </label>
+                                </span>
+                                <input name="activity[form][mobile][title]" type="text" class="form-control" value="<?php echo !empty($sysform['mobile']['title'])?$sysform['mobile']['title']:'手机';?>" placeholder="手机">
+                                <span class="input-group-addon">
+                                <label class="checkbox-inline">
+                                    <input name="activity[form][mobile][need]" value="1" type="hidden">
+                                    <input type="checkbox" checked="" value="1" disabled="true">必填
+                                </label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group-title">表单设置</div>
+                <div id='forms' class="diyform-group">
+                    <?php  if(empty($forms['0'])) { ?><font class="point" color="#aaaaaa">未设置，可从右侧选择添加</font><?php  } ?>
+                    <?php  if(is_array($forms['0'])) { foreach($forms['0'] as $form) { ?>
+                    <?php  $form['placeholder'] = '输入'.$form['title'].'标题';?>
+                    <?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('activity/tpl/form', TEMPLATE_INCLUDEPATH)) : (include fx_template('activity/tpl/form', TEMPLATE_INCLUDEPATH));?>
+                    <?php  } } ?>
+                </div>
+            </div>
+            <div class="col-sm-4 form-group-btn" style="position:relative">
+                <div class="panel panel-default" style="background:#f9fafc;border: 1px solid #ecf0f5;">
+                    <div class="panel-body">
+                        <p>常用报名项</p>
+                        <div class="list-group js-add-form" data-type="sys">
+                          <a href="javascript:;" class="list-group-item" data-type="gender">性别</a>
+                          <a href="javascript:;" class="list-group-item" data-type="age">年龄</a>
+                          <a href="javascript:;" class="list-group-item" data-type="birthyear">生日</a>
+                          <a href="javascript:;" class="list-group-item" data-type="idcard">身份证</a>
+                          <a href="javascript:;" class="list-group-item" data-type="education">学历</a>
+                          <a href="javascript:;" class="list-group-item" data-type="company">公司</a>
+                          <a href="javascript:;" class="list-group-item" data-type="position">职位</a>
+                          <a href="javascript:;" class="list-group-item" data-type="occupation">职业</a>
+                          <a href="javascript:;" class="list-group-item" data-type="email">邮箱</a>
+                          <a href="javascript:;" class="list-group-item" data-type="resideprovince">城市</a>
+                          <a href="javascript:;" class="list-group-item" data-type="address">地址</a>
+                          <a href="javascript:;" class="list-group-item" data-type="zipcode">邮编</a>
+                          <a href="javascript:;" class="list-group-item" data-type="qq">QQ号</a>
+                          
+                          <a href="javascript:;" class="list-group-item" data-type="graduateschool">学校</a>
+                          <a href="javascript:;" class="list-group-item" data-type="grade">班级</a>
+                          <a href="javascript:;" class="list-group-item" data-type="studentid">学号</a>
+                          <a href="javascript:;" class="list-group-item" data-type="zodiac">生肖</a>
+                          <a href="javascript:;" class="list-group-item" data-type="constellation">星座</a>
+                          <a href="javascript:;" class="list-group-item" data-type="weight">体重</a>
+                          <a href="javascript:;" class="list-group-item" data-type="height">身高</a>
+                          <a href="javascript:;" class="list-group-item" data-type="bloodtype">血型</a>
+                          <a href="javascript:;" class="list-group-item" data-type="interest">爱好</a>
+                        </div>
+                        <p>自定义项</p>
+                        <div class="list-group js-add-form" data-type="diy">
+                          <a href="javascript:;" class="list-group-item" data-type="3">+单行文本</a>
+                          <a href="javascript:;" class="list-group-item" data-type="9">+多行文本</a>
+                          <a href="javascript:;" class="list-group-item" data-type="4">+数字文本</a>
+                          <a href="javascript:;" class="list-group-item" data-type="0">+单选类型</a>
+                          <a href="javascript:;" class="list-group-item" data-type="1">+多选类型</a>
+                          <a href="javascript:;" class="list-group-item" data-type="2">+下拉选框</a>
+                          <a href="javascript:;" class="list-group-item" data-type="7">+时间类型</a>
+                          <a href="javascript:;" class="list-group-item" data-type="11">+日期类型</a>
+                          <a href="javascript:;" class="list-group-item" data-type="5">+单图上传</a>
+                          <a href="javascript:;" class="list-group-item" data-type="6">+多图上传</a>
+                          <a href="javascript:;" class="list-group-item" data-type="12">+视频类型</a>
+                          <a href="javascript:;" class="list-group-item" data-type="8">+地区城市</a>
+                          <a href="javascript:;" class="list-group-item" data-type="10">+手机类型</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body table-responsive" id="options" style="padding:0;">
+                <?php  echo $forms['1'];?>
+            </div>
+        </div>
+        <link href="<?php echo FX_URL;?>web/resource/css/style.min.css" rel="stylesheet">
+        <link href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+        <script language="javascript">
+        require(['jquery.ui'], function ($){
+            $('#forms').sortable({
+                opacity:0.45,
+                stop: function(){
+                    //window.optionchanged = true;
+                }
+            });
+            $('.form_item_items').sortable({
+                opacity:0.25,
+                handle:'.fa-arrows',
+                stop: function(){
+                    //window.optionchanged = true;
+                }
+            });
+			$('.form_item_item_items').sortable({
+                opacity:0.25,
+                handle:'.fa-arrows',
+                stop: function(){
+                    //window.optionchanged = true;
+                }
+            });
+            $( "#draggable" ).resizable();
+            $( "#draggable" ).draggable({
+                start: function(event) {
+                  
+                },
+                drag: function(e) {
+                
+                },
+                stop: function(event) {
+                  console.log(event);                  
+                    //offsetHeight:716
+                    //offsetLeft:32
+                    //offsetTop:13
+                    //offsetWidth:333
+                }
+            });
+        });
+        
+        $(function(){
+            $('.js-add-form .list-group-item').on('click',function(){
+                var type = $(this).parent().data('type');
+                var form_type = $(this).data('type');
+                var form_title = $(this).text();
+                if (type == 'sys' && $("#forms").html().indexOf(form_type)!=-1){
+                    if (module_ver!='v1')
+                        tip.msgbox.err('常用选项不可重复添加!');
+                    else
+                        util.tips('常用选项不可重复添加');
+                    return false;
+                }
+                var url = "<?php  echo web_url('activity/tpl/form')?>";
+                $.ajax({
+                    "url": url,
+                    data: {type:type, form_type:form_type, title:form_title},
+                    success:function(data){
+                        $('#forms').find('.point').remove();
+                        $('#forms').append(data);
+                        var len = $(".add-formitem").length -1;
+                        $('.form_item_items').sortable({
+                            opacity:0.25,
+                            handle:'.fa-arrows',
+                            stop: function(){
+                                //window.optionchanged = true;
+                            }
+                        });
+                        //$(".add-formitem:eq(" +len+ ")").focus();
+                        //window.optionchanged = true;
+                    }
+                });
+            });
+        })
+        function removeForm(formid){
+            if (confirm('确认要删除此表单?')){
+                $("#form_" + formid).remove();
+                //window.optionchanged = true;
+                if ($('#forms').find('.form_item').length==0){
+                    $('#forms').html('<font class ="point" color="#aaaaaa">未设置，可从右侧选择添加</font>');
+                }
+            }
+        }
+        function addFormItem(formid){
+            $("#add-formitem-" + formid).html("正在处理...").attr("disabled", "true");
+            var placeholder; 
+            var url = "<?php  echo web_url('activity/tpl/formitem')?>" + "&formid=" + formid;
+            var len = $('#form_item_' + formid).find('.form_item_item').length;
+            placeholder  = '输入选项'+(len+1);
+            $.ajax({
+                "url": url,
+                data: {displaytype:$("#form_" + formid + " .js-displaytype").val(),placeholder:placeholder},
+                success:function(data){
+                    $("#add-formitem-" + formid).html('<i class="fa fa-plus"></i> 添加选项').removeAttr("disabled");
+                    $('#form_item_' + formid).append(data);
+                    var len = $("#form_" + formid + " .form_item_title").length -1;
+                    $("#form_" + formid + " .form_item_title:eq(" +len+ ")").focus();
+                    //window.optionchanged = true;
+                }
+            });
+        }
+		function addFormItemItem(formitemid){
+            var placeholder; 
+            var url = "<?php  echo web_url('activity/tpl/formitemitem')?>" + "&formitemid=" + formitemid;
+            var len = $('#form_item_item_' + formitemid).find('.form_item_item_item').length;
+            placeholder  = '输入选项'+(len+1);
+            $.ajax({
+                "url": url,
+                data: {placeholder:placeholder},
+                success:function(data){
+					console.log(data);
+                    $('#form_item_item_' + formitemid).append(data);
+                    var len = $("#form_item_" + formitemid + " .form_item_item_title").length -1;
+                    $("#form_item_" + formitemid + " .form_item_item_title:eq(" +len+ ")").focus();
+                }
+            });
+        }
+        function removeFormItem(obj){
+            var siblings = $(obj).parents('.form_item_item').siblings('.form_item_item');
+            $(obj).parent().parent().parent().remove();
+            siblings.each(function(key){
+                $(this).find('.form_item_title').attr('placeholder','输入选项'+(key+1));
+            });
+        }
+		function removeFormItemItem(obj){
+            var siblings = $(obj).parents('.form_item_item_item').siblings('.form_item_item_item');
+            $(obj).parent().parent().parent().remove();
+            siblings.each(function(key){
+                $(this).find('.form_item_item_title').attr('placeholder','输入选项'+(key+1));
+            });
+        }
+        function essentialForm(obj){
+            var essential = $(obj).get(0).checked?"1":"0";
+            $(obj).parent('label').find('input').next().val(essential);
+        }
+        </script>
+    </div>
+</div>
+<!--蜗牛科技-->

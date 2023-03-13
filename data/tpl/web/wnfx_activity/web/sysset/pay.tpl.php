@@ -1,0 +1,58 @@
+<?php defined('IN_IA') or exit('Access Denied');?><?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/header', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/header', TEMPLATE_INCLUDEPATH));?>
+<style>
+.input-group-addon .radio-inline, .input-group-addon .checkbox-inline {
+    padding-top: 0;
+    line-height: 0.95;
+}
+.multi-img-details .multi-item{height:auto}
+</style>
+<div class="page-header">当前位置：<span class="text-primary">支付设置</span></div>
+<div class="page-content">
+<form action="" method="post" class="form-horizontal form-validate" enctype="multipart/form-data" style="" novalidate="novalidate">
+    <div class="alert alert-info">
+        <p style="text-indent: 18px;">注: 以下设置只有 <b>"认证公众号"</b> 设置有效，<b>"订阅号"</b> 请借用 <b>"服务号"</b> 的支付权限。</p>
+        <p style="text-indent: 18px;">非认证公众号请保留默认</p>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">微信支付</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[wechatstatus]" value="2" <?php  if($settings['wechatstatus']==2) { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[wechatstatus]" value="1" <?php  if($settings['wechatstatus']==1 || $settings['wechatstatus']=='') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">余额支付</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[creditpay]" value="1" <?php  if($settings['creditpay']) { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[creditpay]" value="0" <?php  if(!$settings['creditpay']) { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">线下付款</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[deliverystatus]" value="2" <?php  if($settings['deliverystatus']==2) { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[deliverystatus]" value="1" <?php  if($settings['deliverystatus']==1 || $settings['deliverystatus']=='') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-lg control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="submit" value="提交" class="btn btn-primary">
+        </div>
+    </div>
+</form>
+</div>
+<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/footer', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/footer', TEMPLATE_INCLUDEPATH));?>

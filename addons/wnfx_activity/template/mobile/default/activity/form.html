@@ -1,0 +1,25 @@
+<div class="mui-input-row mui-help form_item" id='form_{$form['id']}'>
+    <i class="mui-ext-icon mui-icon-remove js-remove" data-type="form"></i>
+    <i class="mui-ext-icon mui-icon-drag"></i>
+    <span class="mui-label js-form-edit" data-id="{$form['id']}" data-popover="form_edit">{php echo empty($form['title'])?$form['placeholder']:$form['title']}</span>
+    <input name="form_id[]" type="hidden" class="form-control form_id" value="{$form['id']}"/>
+    <input name="form_fieldstype[{$form['id']}]" type="hidden" class="form-control js-fieldstype" value="{$form['fieldstype']}"/>
+    <input name="form_displaytype[{$form['id']}]" type="hidden" class="form-control js-displaytype" value="{$form['displaytype']}"/>
+    <input name="form_title[{$form['id']}]" type="hidden" class="form-control form_title" value="{$form['title']}" placeholder="{$form['placeholder']}"/>
+    <input name="form_description[{$form['id']}]" type="hidden" class="form-control" value="{$form['description']}" placeholder="不填写默认标题名称"/>
+    <div class="mui-help-info">
+        <div class="mui-checkbox">
+            <span>必填</span>            
+            <input type="checkbox" {if $form['essential']==1}checked{/if} value="1" class="js-needFill">
+            <input type="hidden" class="form_essential" name="form_essential[{$form['id']}]" VALUE="{$form['essential']}" />
+        </div>
+    </div>
+    {if $form['displaytype']!=='' && in_array($form['displaytype'], array(0,1,2))}
+    <div id="form_item_{$form['id']}" class='form_item_items' style="display:none">
+    {loop $form['items'] $k $formitem}
+    {php $formitem['placeholder']='输入选项'.($k+1);}
+    {fx_template 'activity/form_item'}
+    {/loop}
+    </div>
+    {/if}
+</div>

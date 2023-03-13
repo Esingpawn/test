@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{php if(isset($title)) $_W['page']['title'] = $title}{if !empty($_W['page']['title'])}{$_W['page']['title']}{/if}{if empty($_W['page']['copyright']['sitename'])}{if IMS_FAMILY != 'x'}{if !empty($_W['page']['title'])} - {/if}{$_W['_config']['sname']}报名管理平台{/if}{else}{if !empty($_W['page']['title'])} - {/if}{$_W['page']['copyright']['sitename']}{/if}</title>
+    <link rel="shortcut icon" href="{FX_URL}icon.jpg" />
+    <link href="{FX_BASE}web/resource_v2/css/bootstrap.min.css?v=3.3.0" rel="stylesheet">
+    <link href="{FX_BASE}web/resource_v2/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="{FX_BASE}web/resource_v2/css/animate.css" rel="stylesheet">
+    <link href="{FX_BASE}web/resource_v2/css/common_v2.css?v={FX_RELEASE_DATE}" rel="stylesheet">
+    <link href="{FX_BASE}web/resource_v2/css/v2.css?v={FX_RELEASE_DATE}" rel="stylesheet">
+    <link href="{FX_BASE}web/resource_v2/fonts/v2/iconfont.css?v=20181126" rel="stylesheet" type="text/css">
+    <link href="{FX_BASE}web/resource_v2/fonts/iconfont.css?v=2016070717" rel="stylesheet" type="text/css">
+    <link href="{FX_BASE}web/resource_v2/fonts/wxiconx/iconfont.css?v=2016070717" rel="stylesheet" type="text/css">
+    <script src="{FX_PATH}web/resource/js/lib/jquery-1.11.1.min.js"></script>
+    <script src="{FX_PATH}web/resource/js/app/util.js?v={IMS_RELEASE_DATE}"></script>
+    <script src="{FX_BASE}web/resource_v2/fonts/v2/iconfont.js"></script>
+	<script src="{FX_BASE}web/resource_v2/js/dist/jquery/jquery.gcjs.js"></script>
+    <script type="text/javascript">
+		if(navigator.appName == 'Microsoft Internet Explorer'){
+			if(navigator.userAgent.indexOf("MSIE 5.0")>0 || navigator.userAgent.indexOf("MSIE 6.0")>0 || navigator.userAgent.indexOf("MSIE 7.0")>0) {
+				alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
+			}
+		}
+		var module_ver = {if $_W['routes']!=''}'v2'{else}'v1'{/if}, module_name='{IN_MODULE}';
+		window.sysinfo = {
+			{if !empty($_W['uniacid'])}'uniacid': '{$_W['uniacid']}',{/if}
+			{if !empty($_W['acid'])}'acid': '{$_W['acid']}',{/if}
+			{if !empty($_W['openid'])}'openid': '{$_W['openid']}',{/if}
+			{if !empty($_W['role'])}'role': '{$_W['role']}',{/if}
+			{if !empty($_W['highest_role'])}'highest_role': '{$_W['highest_role']}',{/if}
+			'isfounder': {if !empty($_W['isfounder'])}1{else}0{/if},
+			'family': '{IMS_FAMILY}',
+			'siteroot': '{$_W['siteroot']}',
+			'siteurl': '{$_W['siteurl']}',
+			'attachurl': '{$_W['attachurl']}',
+			'attachurl_local': '{$_W['attachurl_local']}',
+			'attachurl_remote': '{$_W['attachurl_remote']}',
+			'module' : {'url' : '{if defined('MODULE_URL')}{MODULE_URL}{/if}', 'name' : '{if defined('IN_MODULE')}{IN_MODULE}{/if}'},
+			'cookie' : {'pre': '{$_W['config']['cookie']['pre']}'},
+			'account' : {php echo json_encode($_W['account'])},
+			'server' : {'php' : '{php echo phpversion()}'},
+			'frame': '{FRAME}',
+		};
+    </script>
+    {if IMS_VERSION >= 2.6}<script>var require = { urlArgs: 'v={FX_RELEASE_DATE}' };</script>{/if}
+    <!-- 兼容微擎1.5 -->
+	{if IMS_VERSION >= 1.5}
+    <link href="{FX_PATH}web/resource/css/common.css?v={IMS_RELEASE_DATE}" rel="stylesheet">
+    <script type="text/javascript" src="{FX_PATH}web/resource/js/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{FX_PATH}web/resource/js/app/common.min.js?v={IMS_RELEASE_DATE}"></script>
+    <script type="text/javascript">if(util){util.clip = function(){}}</script>
+    {/if}
+    <script src="{FX_BASE}web/resource_v2/js/require.js"></script>
+    {if IMS_VERSION >= 2.6}<script type="text/javascript" src="{FX_PATH}web/resource/js/lib/jquery.nice-select.js?v={IMS_RELEASE_DATE}"></script>{/if}
+    {if IMS_VERSION > 0.8 && IMS_VERSION != '1.0.0'}
+	<script src="{FX_BASE}web/resource_v2/js/config1.0.js?v=1.0.2"></script>
+    {else}
+    <script src="./resource/js/app/config.js"></script>
+    {/if}
+    <script>
+        require.config({
+            waitSeconds: 0
+        });
+    </script>
+    <script src="{FX_BASE}web/resource_v2/js/myconfig.js?v=20181128"></script>
+    <script type="text/javascript">
+		myrequire.path = "resource_v2/js/";
+		myconfig.path = "{FX_BASE}web/resource_v2/js/";
+        function preview_html(txt)
+        {
+            var win = window.open("", "win", "width=300,height=600"); // a window object
+            win.document.open("text/html", "replace");
+            win.document.write($(txt).val());
+            win.document.close();
+        }
+    </script>
+</head>
+<body>

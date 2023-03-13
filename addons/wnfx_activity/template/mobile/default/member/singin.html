@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>签到结果</title>
+<link rel="stylesheet" type="text/css" href="../app/resource/css/common.min.css?v=201801071">
+<link rel="stylesheet" type="text/css" href="{FX_BASE}app/resource/components/mui/mui.ext.css?v=2018021491202">
+<script type="text/javascript" src="../app/resource/js/app/util.js?v=20180107101"></script>
+<script type="text/javascript" src="../app/resource/js/require.js?v=201801071"></script>
+<script type="text/javascript" src="../app/resource/js/lib/jquery-1.11.1.min.js?v=201801071"></script>
+<script type="text/javascript" src="{FX_BASE}app/resource/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="{FX_BASE}app/resource/js/app/util.min.js?v=20180109503"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        util.loading();
+        util.location(function(res) {
+            window.location.reload();
+        });
+    </script>
+{fx_template 'common/footer'}

@@ -1,0 +1,78 @@
+{fx_template 'common/header'}
+<style type='text/css'>
+    .table-header{
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        -webkit-justify-content: center;
+        -webkit-align-content: space-around;
+        align-content: space-around;
+    }
+    .table-header .others{
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+		display: flex;
+		flex-direction: column;
+		text-align:center;
+		align-items: center;
+    	-webkit-justify-content: center;
+    }
+	.table-header .others.text-left{text-align:left;}
+</style>
+<div class="page-header">
+    当前位置：<span class="text-primary">结算中心</span>
+</div>
+<div class="page-content">
+    <div class="table-responsive" style="margin-bottom:30px">
+        <div class="table-header" style="background:#f8f8f8;">
+            <div style="width:48px;text-align:left;"><image src="{php echo tomedia($item['logo']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"></div>
+            <div class="others text-left">{$item['name']}</div>
+            <div class="others">总成交额：{if $item['amount']}{$item['amount']}元{else}0.00元{/if}</div>
+            <div class="others">可结算金额：{if $item['no_money']}{$item['no_money']}元{else}0.00元{/if}</div>
+            <div class="others">线下付款：{if $item['delivery']}{php echo currency_format($item['delivery'])}元{else}0.00元{/if}</div>
+            <div class="others">上缴佣金：{php echo currency_format($item['no_money']*$item['percent']*0.01);}元</div>
+            <div class="others">佣金比：{if !empty($item['percent'])}{$item['percent']}%{else}0.00%{/if}</div>
+        </div>
+    </div>
+    <table class="table table-responsive table-hover">
+        <thead class="navbar-inner">
+            <tr>
+                <th class="col-sm-2">操作</th>
+                <th class="col-sm-4">金额变更</th>
+                <th class="col-sm-4">详情</th>
+                <th class="col-sm-2">变更时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {loop $moneyRecord $row}
+            <tr>
+                <td>{if !empty($row['records'])}订单ID：{$row['recordsid']}<br>{$row['records']['title']}{else}主办方结算{/if}</td>
+                <td>{if $row['type']==0}总成交额{elseif $row['type']==1}总成交额{elseif $row['type']==2}可结算金额{elseif $row['type']==3}可结算金额{elseif $row['type']==4}可结算金额{elseif $row['type']==5}退款，收入{elseif $row['type']==6}线下付款{elseif $row['type']==7}结算手续费{elseif $row['type']==8}总成交额{elseif $row['type']==9}总成交额{elseif $row['type']==10}可结算金额{/if}&nbsp;&nbsp;  <span style="color:{if $row['money']>0}#4cae4c{else}#F26C4F{/if};font-size: 20px;"><b>{if $row['money']>0}+{/if}</b>{$row['money']}</span></td>
+                <td>{$row['detail']}</td>
+                <td>{php echo date("Y-m-d H:i:s",$row['createtime'])}</td>
+            </tr>
+            {/loop}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align:right">
+                    {$pager}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<script type="text/javascript">
+	require(['bootstrap'], function () {
+		$('#myTab a').click(function (e) {
+			$('#tab').val( $(this).attr('href'));
+			e.preventDefault();
+			$(this).tab('show');
+		})
+	});
+</script>
+{fx_template 'common/footer'}

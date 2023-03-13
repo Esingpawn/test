@@ -1,0 +1,57 @@
+<style>.modal-dialog{width:65%}.modal-dialog .modal-body{max-height:550px!important;}</style>
+<form class="form-horizontal form-validate" action="{php echo web_url('merch/op/mcert')}" method="post" enctype="multipart/form-data">
+    <input type='hidden' name='id' value='{$id}' />
+	<div class="modal-dialog">
+           <div class="modal-content">
+           <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">权限设置</h4>
+            </div>
+            <div class="modal-body overflow-auto">
+            	{if $mcert['type']==1}
+                {php fx_load()->model('mc');}
+                <table class="table table-cron table-hover table-bordered">
+                    <tbody>
+                        <tr><th width="150">审核状态{php echo mc_openid2uid($_W['member']['uid'])}</th><td>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="1"{if $mcert['status']==1} checked="checked"{/if}> 通过
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="2"{if $mcert['status']==2} checked="checked"{/if}> 驳回
+                        </label></td></tr>
+                        <tr><th width="150">认证类型</th><td>个人认证</td></tr>
+                        <tr><th width="150">证件类型</th><td>身份证</td></tr>
+                        <tr><th width="150">真实姓名</th><td>{$mcert['detail']['name']}</td></tr>
+                        <tr><th width="150">证件号码</th><td>{$mcert['detail']['idcard']}</td></tr>
+                        <tr><th width="150">证件正面照片</th><td><a href="{php echo tomedia($mcert['detail']['thumb'][0]);}" target="_blank"><img src="{php echo tomedia($mcert['detail']['thumb'][0]);}" height="100" style="margin:0 5px 5px 0;"></a></td></tr>
+                        <tr><th width="150">证件背面照片</th><td><a href="{php echo tomedia($mcert['detail']['thumb'][1]);}" target="_blank"><img src="{php echo tomedia($mcert['detail']['thumb'][1]);}" height="100" style="margin:0 5px 5px 0;"></a></td></tr>
+                        <tr><th width="150">通知备注</th><td><input type="text" name="messge_remark" class="form-control" value="" placeholder="在此填写审核结果备注说明"></td></tr>
+                    </tbody>
+                </table>
+                {else}
+                <table class="table table-cron table-hover table-bordered">
+                    <tbody>
+                        <tr><th width="150">审核状态</th><td>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="1"{if $mcert['status']==1} checked="checked"{/if}> 通过
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="2"{if $mcert['status']==2} checked="checked"{/if}> 驳回
+                        </label></td></tr>
+                        <tr><th width="150">认证类型</th><td>企业认证</td></tr>
+                        <tr><th width="150">企业全称</th><td>{$mcert['detail']['company']}</td></tr>
+                        <tr><th width="150">法定代表人姓名</th><td>{$mcert['detail']['name']}</td></tr>
+                        <tr><th width="150">营业执照注册码</th><td>{$mcert['detail']['idcard']}</td></tr>
+                        <tr><th width="150">营业执照照片</th><td><a href="{php echo tomedia($mcert['detail']['thumb'][0]);}" target="_blank"><img src="{php echo tomedia($mcert['detail']['thumb'][0]);}" height="100" style="margin:0 5px 5px 0;"></a></td></tr>
+                        <tr><th width="150">通知备注</th><td><input type="text" name="messge_remark" class="form-control" value="" placeholder="在此填写审核结果说明"></td></tr>
+                    </tbody>
+                </table>
+                {/if}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">提交</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+            </div>
+        </div>
+	</div>
+</form>

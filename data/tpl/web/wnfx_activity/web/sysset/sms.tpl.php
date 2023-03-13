@@ -1,0 +1,91 @@
+<?php defined('IN_IA') or exit('Access Denied');?><?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/header', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/header', TEMPLATE_INCLUDEPATH));?>
+<style>
+.input-group-addon .radio-inline, .input-group-addon .checkbox-inline {
+    padding-top: 0;
+    line-height: 0.95;
+}
+.multi-img-details .multi-item{height:auto}
+</style>
+<div class="page-header">当前位置：<span class="text-primary">短信设置</span></div>
+<div class="page-content">
+<form action="" method="post" class="form-horizontal form-validate" enctype="multipart/form-data" style="" novalidate="novalidate">
+	<div class="alert alert-info">
+        <ol>
+            <li>说明：短信接口目前仅支持阿里云<a target="_blank" href="https://www.aliyun.com/">【点此申请阿里短信】</a>。</li>
+            <li><br>相关变量：</li>
+            <li>1、短信验证：${code} = 验证码。</li>
+            <li>2、报名通知：${product} = 当前公众号名称，${item} = 活动名称，${name} = 姓名，${timestr} = 活动开始时间，${idcode} = 核销码，${address} = 地址</li>
+            <li>3、群发通知：${item} = 标题，${remark} = 备注<span class="text-danger">【注：报名通知变量同样适用于群发模板】</span></li>
+            <li>4、通知模板ID可在活动编辑中独立设置</li>
+            <li class="text-danger">注：每个变量值长度默认20字符，如需增加请联系阿里客服申请</li>
+            <li><br>参考范本：<br>你好：${name}，您已成功报名"${item}"，活动开始时间：${timestr}，活动地点：${address}，届时请准时参加！</li>
+        </ol>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">手机验证</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[smsswitch]" value="1" <?php  if($settings['smsswitch']==1) { ?>checked="checked"<?php  } ?>> 开启
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[smsswitch]" value="0" <?php  if($settings['smsswitch']==0 || $settings['smsswitch']=='') { ?>checked="checked"<?php  } ?>> 关闭
+            </label>
+        </div>
+    </div>
+    <div class="form-group" style="display:none">
+        <label class="col-lg control-label">接口类型</label>
+        <div class="col-sm-9 col-xs-12">
+            <label class="radio-inline">
+                <input type="radio" name="module[sms_type]" value="0"> 阿里大于
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="module[sms_type]" value="1" checked="checked"> 阿里云通信【2017年6月28之后申请的】
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">KeyID</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[sms_appkey]" class="form-control" value="<?php  echo $settings['sms_appkey'];?>" placeholder="应用管理 - 应用列表 - appkey">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-lg control-label">KeySecret</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[sms_appsecret]" class="form-control encrypt" value="<?php  echo $settings['sms_appsecret'];?>" placeholder="应用管理 - 应用列表 - 【设置】 查看">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">短信签名</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[sms_signname]" class="form-control encrypt" value="<?php  echo $settings['sms_signname'];?>" placeholder="短信签名，传入的短信签名必须是审核通过的签名">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">验证码模板ID</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[sms_code]" class="form-control encrypt" value="<?php  echo $settings['sms_code'];?>" placeholder='"SMS_" 开头的字串'>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">报名通知ID</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[sms_notify]" class="form-control encrypt" value="<?php  echo $settings['sms_notify'];?>" placeholder='"SMS_" 开头的字串'>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">群发通知ID</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[sms_group]" class="form-control encrypt" value="<?php  echo $settings['sms_group'];?>" placeholder='"SMS_" 开头的字串'>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="submit" value="提交" class="btn btn-primary">
+        </div>
+    </div>
+</form>
+</div>
+<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('common/footer', TEMPLATE_INCLUDEPATH)) : (include fx_template('common/footer', TEMPLATE_INCLUDEPATH));?>

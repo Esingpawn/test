@@ -1,0 +1,137 @@
+{fx_template 'common/header'}
+<style>
+.input-group-addon .radio-inline, .input-group-addon .checkbox-inline {
+    padding-top: 0;
+    line-height: 0.95;
+}
+.multi-img-details .multi-item{height:auto}
+</style>
+<div class="page-header">当前位置：<span class="text-primary">信息设置</span></div>
+<div class="page-content">
+<form action="" method="post" class="form-horizontal form-validate" enctype="multipart/form-data" style="" novalidate="novalidate">
+	<div class="form-group-title">基本信息</div>
+    <div class="form-group">
+        <label class="col-lg control-label">官方名称</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[sname]" class="form-control" value="{$settings['sname']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">官方图标</label>
+        <div class="col-sm-9 col-xs-12">
+            {php echo tpl_form_field_image('module[slogo]', $settings['slogo']);}		
+            <span class="help-block">建议150×150像素</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">虚拟关注</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[followno]" class="form-control" value="{php echo $settings['followno']?$settings['followno']:0;}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">官方介绍</label>
+        <div class="col-sm-9 col-xs-12">
+             <textarea style="height:150px;" name="module[detail]" class="form-control" cols="60">{$settings['detail']}</textarea>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-lg control-label must">管理设置</label>
+        <div class="col-sm-9 col-xs-12">
+            <?php echo tpl_selector('openids',
+            array('multi'=>1,
+            'value'=>(!empty($members)?null:'可指定多个管理员'),
+            'key'=>'openid',
+            'text'=>'nickname',
+            'thumb'=>'avatar',        
+            'placeholder'=>'昵称/姓名/手机号',
+            'buttontext'=>'选择管理员 ',
+            'items'=>$members,
+            'url'=>web_url('member/query')))?>
+            <span class='help-block'>可指定多个管理员【用于移动端管理，和接收全局通知】</span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-lg control-label">场地名称</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[storename]" class="form-control" value="{$settings['storename']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">位置坐标</label>
+        <div class="col-sm-9 col-xs-12">
+        {php echo tpl_form_field_position('module',array('lng'=>$settings['lng'],'lat'=>$settings['lat'],'adinfo'=>$settings['adinfo']))}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">详细地址</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[address]" class="form-control" value="{$settings['address']}" placeholder="活动详细地址" id="address"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">联系人员</label>
+        <div class="col-sm-9 col-xs-12">
+            <input name="module[linkman_name]" class="form-control" value="{$settings['linkman_name']}" type="text" placeholder="联系人姓名">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">联系电话</label>
+        <div class="col-sm-9 col-xs-12">
+            <input name="module[mobile]" class="form-control" value="{$settings['mobile']}" type="text" placeholder='只可填写一个'>
+        </div>
+    </div>
+    
+    <div class="form-group-title">官方客服</div>
+    <div class="alert alert-info">
+        <p style="text-indent: 18px;">注：显示在移动端：我的->主办方->帮助</p>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">客服电话</label>
+        <div class="col-sm-9 col-xs-12">
+            <input name="module[kefutel]" class="form-control" value="{$settings['kefutel']}" type="text" placeholder='多个用","号分开，不可填写中文'>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">客服微信</label>
+        <div class="col-sm-9 col-xs-12">
+            <input name="module[kefuwixin]" class="form-control" value="{$settings['kefuwixin']}" type="text">
+        </div>
+    </div>
+    
+    <div class="form-group-title">版权信息</div>
+    <div class="alert alert-info">
+        <p style="text-indent: 18px;">注：显示在移动端部分页面最下方，留空不显示</p>
+    </div>
+    {php $copyright = $settings['copyright']}
+    <div class="form-group">
+        <label class="col-lg control-label">版权信息</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[copyright][title]" class="form-control" value="{php echo !empty($copyright['title'])?$copyright['title']:'';}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">版权连接</label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="text" name="module[copyright][link]" class="form-control" value="{php echo !empty($copyright['link'])?$copyright['link']:'';}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label">版权标志</label>
+        <div class="col-sm-9 col-xs-12">
+            {php echo tpl_form_field_image('module[copyright][logo]', !empty($copyright['logo'])?$copyright['logo']:'');}
+            <span class="help-block">建议150×95像素</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-lg control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="submit" value="提交" class="btn btn-primary">
+        </div>
+    </div>
+</form>
+</div>
+{fx_template 'common/footer'}

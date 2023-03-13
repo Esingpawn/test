@@ -1,0 +1,596 @@
+{fx_template 'common/header'}
+<style type="text/css">
+.mui-bar a{color: #ff9900;}
+.mui-btn-primary{background-color: #ff9900;}
+.mui-btn-primary:enabled:active{background-color: #ec7230!important;}
+.mui-textarea{ height:auto!important; width:100%;}
+.area {margin: 20px auto 0px auto;}
+.mui-input-group:first-child {margin-top: 20px;}
+.mui-rmb i{ font-style:normal; }
+.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea {width: 65%;}
+.mui-del{color:#999}
+footer .mui-input-row label{line-height:2!important;margin:11px 0; text-align:right; float:right;}
+footer .mui-input-row span{line-height:1.7; padding:11px 10px 11px 0;}
+footer .mui-input-row .mui-btn{top: 0; font-size:16px;line-height:1.6!important;border-radius:0; width:35%}
+.mui-input-row #get_code{width:auto; border-radius: 0;line-height: 1.7;}
+.mui-help-top .mui-table-view-cell{padding: 9px 12px;}
+.mui-help-top .mui-icon-help:before{ color:#fe5001;font-size:18px;top:43%;}
+.mui-help-top .mui-small{ font-size:90%!important;}
+.mui-help-top .mui-help-info:before{position: absolute;content: ""; height:99%!important;left:0;top:0;width:3px; background-color:#fe5001;}
+.mui-input-row.mui-help .mui-help-info{padding-right:30px;}
+.mui-input-row{height:auto!important;min-height:40px;}
+.mui-input-row label{padding:0 15px;}
+.mui-input-row.mui-radio label, .mui-input-row.mui-checkbox label{padding-right:50px;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;white-space:normal;word-wrap: break-word;}
+</style>
+<form id="formdata" action="" method="post" onSubmit="return check(this)" style="position: initial">
+<footer class="mui-bar mui-bar-footer">
+    <input type="submit" class="mui-btn mui-btn-yellow mui-btn-block" name="submit_btn" value="保存" />
+    <input type="hidden" name="submit" value="保存" />
+    <input type="hidden" name="id" value="{$id}" />
+    <input type="hidden" name="token" value="{$_W['token']}" />
+</footer>
+<div class="mui-content">
+	<div class="mui-content-padded">
+        <p>基本信息</p>
+    </div>
+	<div class="mui-input-group">
+        {if $sysform['realname']['show']!='0'}
+        <div class="mui-input-row">
+            <label>{$sysform['realname']['title']}</label>
+            <input type="text" name="member[realname]" id="realname" placeholder="{$sysform['realname']['title']} (必填)" value="{$formdata_common['realname']}">
+        </div>
+        {/if}
+        {if $sysform['mobile']['show']!='0'}
+        <div class="mui-input-row mui-help">
+            <label>{$sysform['mobile']['title']}</label>
+            <input type="number" name="member[mobile]" id="mobile" placeholder="{$sysform['mobile']['title']} (必填)" pattern="[0-9]*" value="{$formdata_common['mobile']}"{if !empty($formdata_common['mobile']) && $_W['_config']['smsswitch']} onfocus="this.blur()"{/if}/>
+            {if !empty($formdata_common['mobile']) && $_W['_config']['smsswitch']}
+            <div class="mui-help-info mui-navigate-right mui-text-right js-check-mobile"><span class="mui-badge mui-badge-inverted">点此变更</span></div>
+            {/if}
+        </div>
+        {/if}
+        {if $_W['_config']['smsswitch']}
+        <div class="mui-input-row mui-help{php echo $formdata_common['mobile']?'':' active';}"{if !empty($formdata_common['mobile'])} style="display:none"{/if}>
+            <label>验证码</label>
+            <input type="number" name="smscode" id="smscode" placeholder="验证码 (必填)" pattern="[0-9]*">
+            <div class="mui-help-info mui-text-right" style="padding-right:18px;"><a href="javascript:;" id="get_code">获取验证码</a></div>
+        </div>
+        {/if}
+        {php $key = 0;}
+        {loop $forms[0] $k $form}
+        {php $placeholder = empty($form['description']) ? $form['title'] : $form['description'];}
+        
+        {if $form['essential']==1}
+            {if !empty($form['fieldstype'])}
+            	{php $placeholder .= ' (必填)';}
+            	<input name="essential" type="hidden" value="" title="{$form['title']}" data-type="{$form['fieldstype']}"/>
+            {else}
+            	<input name="essential" type="hidden" value="{$key}" title="{$form['title']}" data-type="{$form['displaytype']}"/>
+            {/if}
+        {/if}
+        
+        {if !empty($form['fieldstype'])}
+        	<div class="mui-input-row{if $form['essential']==1} js-check-fields{/if}" data-title="{$form['title']}" data-type="{$form['fieldstype']}">
+            {if $form['fieldstype']=='age'}
+            	<label>{$form['title']}</label>
+                <input type="number" name="member[{$form[fieldstype]}]" value="{$formdata_common['age']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+            {elseif $form['fieldstype']=='studentid'}
+                <label>{$form['title']}</label>
+                <input type="number" name="member[studentid]" value="{$formdata_common['studentid']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+            {elseif $form['fieldstype']=='zipcode'}
+                <label>{$form['title']}</label>
+                <input type="number" name="member[zipcode]" value="{$formdata_common['zipcode']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+            {elseif $form['fieldstype']=='qq'}
+                <label>{$form['title']}</label>
+                <input type="number" name="member[qq]" value="{$formdata_common['qq']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+            {elseif $form['fieldstype']=='weight'}
+            	{php $placeholder = $form['essential']==1 ? $form['title'] . '：单位kg' . ' (必填)':$form['title'];}
+                <label>{$form['title']}</label>
+                <input type="number" name="member[weight]" value="{$formdata_common['weight']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+            {elseif $form['fieldstype']=='height'}
+            	{php $placeholder = $form['essential']==1 ? $form['title'] . '：单位cm' . ' (必填)':$form['title'];}
+                <label>{$form['title']}</label>
+                <input type="number" name="member[height]" value="{$formdata_common['height']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+            {elseif $form['fieldstype']=='gender'}	
+                <label>{$form['title']}</label>
+            	{php echo tpl_app_fans_form('gender', $formdata_common['gender'], $placeholder);}
+            {elseif $form['fieldstype']=='birthyear'}
+            	<label>{$form['title']}</label>
+            	{php echo tpl_app_fans_form('birth', array('year' => $formdata_common['birthyear'], 'month' => $formdata_common['birthmonth'], 'day' => $formdata_common['birthday']), $placeholder);}
+            {elseif $form['fieldstype']=='resideprovince'}
+            	<label>{$form['title']}</label>
+            	{php echo tpl_app_fans_form('reside', array('province' => $formdata_common['resideprovince'], 'city' => $formdata_common['residecity'], 'district' => $formdata_common['residedist']), $placeholder);}
+            {elseif $form['fieldstype']=='education'}
+                <label>{$form['title']}</label>
+                {php echo tpl_app_fans_form('education', $formdata_common['education'], $placeholder);}
+            {elseif $form['fieldstype']=='constellation'}
+                <label>{$form['title']}</label>
+                {php echo tpl_app_fans_form('constellation', $formdata_common['constellation'], $placeholder);}
+            {elseif $form['fieldstype']=='zodiac'}
+                <label>{$form['title']}</label>
+                {php echo tpl_app_fans_form('zodiac', $formdata_common['zodiac'], $placeholder);}
+            {elseif $form['fieldstype']=='bloodtype'}
+                <label>{$form['title']}</label>
+                {php echo tpl_app_fans_form('bloodtype', $formdata_common['bloodtype'], $placeholder);}
+            {else}
+                <label>{$form['title']}</label>
+                {php echo tpl_app_fans_form('member['.$form['fieldstype'].']', $formdata_common[$form['fieldstype']], $placeholder);}
+            {/if}
+            </div>
+        {else}
+            <input name="form_id[]" type="hidden" class="form-control form_id" value="{$form['id']}"/>
+            {if $form['displaytype']==0}
+                <h5 class="mui-desc-title mui-pl15">请选择{$form['title']}{php echo empty($form['description']) ?'':'【'.$form['description'].'】'}{if $form['essential']==1} <span class="mui-text-error">*</span>{/if}</h5>
+                {loop $form['items'] $formitem}
+                <div class="mui-input-row mui-radio">
+                    <label>{$formitem['title']}</label>
+                    <input name="form_item_val_{$key}" type="radio" {if $form['data']==$formitem['title']}checked{/if} value="{$formitem['title']}">
+                </div>
+                {/loop}
+                <p></p>
+            {elseif $form['displaytype']==1}
+                <h5 class="mui-desc-title mui-pl15">请选择{$form['title']}{php echo empty($form['description']) ?'':'【'.$form['description'].'】'}(可多选){if $form['essential']==1} <span class="mui-text-error">*</span>{/if}</h5>
+                {loop $form['items'] $i $formitem}
+                <div class="mui-input-row mui-checkbox">
+                    <label>{$formitem['title']}</label>
+                    <input name="form_item_val_{$key}[]" {if in_array($formitem['title'], $form['data'])}checked{/if} value="{$formitem['title']}" type="checkbox">
+                </div>
+                {/loop}
+                <p></p>
+            {elseif $form['displaytype']==2}
+                <div class="mui-input-row">
+                <label>{$form['title']}</label>
+                <input class="form_item_val_{$key}" name="form_item_val_{$key}" type="text" value="{$form['data']}" readonly placeholder="{php echo empty($form['description'])?'请选择'.$form['title']:$form['description']}{if $form['essential']==1} (必选){/if}">
+				<script type="text/javascript">
+                $(".form_item_val_{$key}").on("tap", function(){
+                    var options = {data: [
+                    {loop $form['items'] $formitem}
+                    {"text":"{$formitem['title']}","value":"{$formitem['title']}"},
+                    {/loop}
+                    ]};
+                    var $this = $(this);
+                    util.poppicker(options, function(items){
+                        $this.val(items[0].value);
+                    });
+                });
+                </script>
+                </div>
+            {elseif $form['displaytype']==3}
+                <div class="mui-input-row">
+                    <label>{$form['title']}</label>
+                    <input name="form_item_val_{$key}" value="{$form['data']}" type="text"  placeholder="{php echo empty($form['description'])?'请输入'.$form['title']:$form['description']}{php echo  $form['essential']==1?' (必填)':''}">
+                </div>
+            {elseif $form['displaytype']==4}
+                <div class="mui-input-row">
+                    <label>{$form['title']}</label>
+                    <input name="form_item_val_{$key}" value="{$form['data']}" type="number"  placeholder="{php echo empty($form['description'])?'请输入'.$form['title']:$form['description']}{if $form['essential']==1} (必填){/if}" pattern="[0-9]*">
+                </div>
+            {elseif $form['displaytype']==5}
+                <p></p>
+                <div class="mui-input-cell mui-after-no">
+                    <div class="mui-table-view-chevron">
+                        <div class="mui-image-uploader">
+                            <div class="mui-image-preview js-image-preview{$key}">
+                            	<div class="file-item js-thumb" data-id="{php echo attachment_id($form['data'])}" style="{if empty($form['data'])}display:none;{/if}">
+                                <img src="{php echo tomedia($form['data'])}" data-preview-src="{php echo tomedia($form['data'])}" data-preview-group="__IMG_UPLOAD_pic"/>
+                                <input type="hidden" value="{$form['data']}" id="pic{$key}" name="form_item_val_{$key}" />
+                                <div class="file-panel"><span>×</span></div>
+                                </div>
+                            </div>
+                            <a href="javascript:;" class="mui-upload-btn js-image-pic{$key} mui-inline"></a>
+                        </div>
+                        <script>
+                            var obj{$key}=".js-image-pic{$key}";
+                            util.img(obj{$key}, function(data){
+                                $(obj{$key}).parent().find('.js-image-preview{$key}').find('#pic{$key}').val(data.attachment);
+                                $(obj{$key}).parent().find('.js-image-preview{$key}').find('img').attr("src",data.url);
+                                $(obj{$key}).parent().find('.js-image-preview{$key}').find('img').attr("data-preview-src",data.url);
+								$(obj{$key}).parent().find('.js-image-preview{$key}').find('.js-thumb').attr("data-id",data.id);
+								$(obj{$key}).parent().find('.js-image-preview{$key}').find('.js-thumb').show();
+								$("input[name='token']"). val(data.token);
+                            }, {
+                                crop : true,
+                                multiple : false,
+                                preview : '__IMG_UPLOAD_pic',
+								pxSize : {php echo intval($_W['_config']['image']['pxsize'])>0?$_W['_config']['image']['pxsize']:640},
+								aspectRatio:{$_W['_config']['image']['ratio']},
+								resizable:1
+                            });
+							setTimeout(function(){
+							   $(obj{$key}).append('<div class="btn-intro" style="position:absolute;color:#d7d7d7;top:54px;line-height: 1.2; left:0; right:0;">上传{$form['title']}<br>(最多1张{if $form['essential']==1 }*{/if})</div>')
+							},1000);
+                        </script>
+                    </div>
+                </div>
+                <p></p>
+            {elseif $form['displaytype']==6}
+                <p></p>
+                <div class="mui-input-cell mui-after-no">
+                    <div class="mui-table-view-chevron">
+                        <div class="mui-image-uploader">
+                            <div class="mui-image-preview js-image-nopic mui-pull-left" style="display:none">
+                                <img src="{FX_URL}app/resource/images/nopic.jpg"/>
+                            </div>
+                            <div class="mui-image-preview js-image-preview{$key}">
+                            	{loop (array)$form['data'] $k $img}
+                                <div class="file-item js-thumb-item" data-id="{php echo attachment_id($img)}"><input type="hidden" value="{$img}" name="form_item_val_{$key}[]"><img src="{php echo tomedia($img)}" data-preview-src="{php echo tomedia($img)}" data-preview-group="__IMG_UPLOAD_image"><div class="file-panel"><span>×</span></div></div>
+                                {/loop}
+                            </div>
+                            <a href="javascript:;" class="mui-upload-btn js-image-pic{$key} mui-inline"></a>
+                        </div>
+                        <script>
+                            var obj{$key}=".js-image-pic{$key}";
+                            util.img(obj{$key}, function(data){
+                                $(obj{$key}).parent().find('.js-image-preview{$key}').append('<div class="file-item js-thumb-item" data-id="'+data.id+'"><input type="hidden" value="'+data.attachment+'" name="form_item_val_{$key}[]" /><img src="'+data.url+'" data-preview-src="" data-preview-group="__IMG_UPLOAD_image" /><div class="file-panel"><span>×</span></div></div>');
+                                $(".js-image-nopic").hide();
+								$("input[name='token']"). val(data.token);
+                            }, {
+                                crop : true,
+                                multiple : true,
+                                preview : '__IMG_UPLOAD_pic',
+								pxSize : {php echo intval($_W['_config']['image']['pxsize'])>0?$_W['_config']['image']['pxsize']:640},
+								aspectRatio:{$_W['_config']['image']['ratio']},
+								resizable:1
+                            });
+							setTimeout(function(){
+							   $(obj{$key}).append('<div class="btn-intro" style="position:absolute;color:#d7d7d7;top:54px;line-height: 1.2; left:0; right:0;">上传{$form['title']}<br>(最多8张{if $form['essential']==1 }*{/if})</div>')
+							},1000);
+                        </script>
+                    </div>
+                </div>
+                <p></p>
+            {elseif $form['displaytype']==7}
+                <div class="mui-input-row">
+                    <label>{$form['title']}</label>
+                    <input class="mui-calendar-picker{$key} js-withtime" type="text" placeholder="{php echo empty($form['description'])?'请选择'.$form['title']:$form['description']}{if $form['essential']==1} (必选){/if}" value="{$form['data']}" readonly>
+                    <input type="hidden" value="" name="form_item_val_{$key}">
+                    <script type="text/javascript">
+                        $(document).on("tap", ".mui-calendar-picker{$key}", function(){
+                            var $this = $(this);
+                            util.datepicker({
+								type: "datetime", 
+								beginYear: 1900, 
+								endYear: 2060
+							}, function(rs){
+                                $this.val(rs.value).next().val(rs.value);
+                            });
+                        });
+                    </script>
+                </div>
+            {elseif $form['displaytype']==8}
+                <div class="mui-input-row">
+                    <label>请选择{$form['title']}{if $form['essential']==1}<span class="mui-text-error">*</span>{/if}</label>
+                    {php echo tpl_app_form_field_district('form_item_val_'.$key, array('province' => $form['data'][0], 'city' => $form['data'][1], 'district' => $form['data'][2]), $placeholder);}
+                </div>
+            {elseif $form['displaytype']==9}
+            	<p></p>
+                <div style="background:#FFF;overflow:hidden">
+                    <div class="mui-content-padded">
+                        <textarea name="form_item_val_{$key}" placeholder="{php echo empty($form['description'])?'请输入'.$form['title']:$form['description']}{if $form['essential']==1} (必填){/if}" style="padding:3px;">{$form['data']}</textarea>
+                    </div>
+                </div>
+                <p></p>
+            {elseif $form['displaytype']==10}
+                <div class="mui-input-row mobiles" title="{$form['title']}">
+                    <label>{$form['title']}</label>
+                    <input name="form_item_val_{$key}" value="{$form['data']}" type="text"  placeholder="{php echo empty($form['description'])?'请输入'.$form['title']:$form['description']}{if $form['essential']==1} (必填){/if}">
+                </div>
+            {elseif $form['displaytype']==11}
+                <div class="mui-input-row">
+                    <label>{$form['title']}</label>
+                    <input class="mui-calendar-picker{$key}" type="text" placeholder="{php echo empty($form['description'])?'请选择'.$form['title']:$form['description']}{if $form['essential']==1} (必选){/if}" value="{$form['data']}" readonly>
+                    <input type="hidden" value="" name="form_item_val_{$key}">
+                    <script type="text/javascript">
+                        $(document).on("tap", ".mui-calendar-picker{$key}", function(){
+                            var $this = $(this);
+                            util.datepicker({
+								type: "date", 
+								beginYear: 1900, 
+								endYear: 2060
+							}, function(rs){
+                                $this.val(rs.value).next().val(rs.value);
+                            });
+                        });
+                    </script>
+                </div>
+            {elseif $form['displaytype']==12}
+                <p></p>
+                <div class="mui-input-cell mui-after-no">
+                    <div class="mui-table-view-chevron">
+                        <div class="mui-image-uploader">
+                            <div class="mui-image-preview js-video-preview-{$key}">
+                                <div class="file-item js-video" data-id="{php echo attachment_id($form['data'])}"{if empty($form['data'])} style="display:none;"{/if}>
+                                <a href="{php echo empty($form['data'])?'void()':tomedia($form['data'])}" target="_blank"><img src="{FX_URL}app/resource/images/video.png"/></a>
+                                <input type="hidden" value="{$form['data']}" id="video{$key}" name="form_item_val_{$key}" />
+                                <div class="file-panel"><span>×</span></div>
+                                </div>
+                            </div>
+                            <a href="javascript:;" class="mui-upload-btn js-video-{$key} mui-inline"></a>
+                        </div>
+                        <div style="padding:0 15px;text-align:right"><h5 class="mui-small">{$placeholder}</h5></div>
+                        <script>
+                            util.video(".js-video-{$key}", function(data){
+                                var _this = ".js-video-{$key}";
+                                $(_this).parent().find('.js-video-preview-{$key}').find('.js-video').attr("data-id",data.id);
+                                $(_this).parent().find('.js-video-preview-{$key}').find('.js-video').fadeTo(500,1);
+								$(_this).parent().find('.js-video-preview-{$key}').find('#video{$key}').val(data.attachment);
+                                $("input[name='token']"). val(data.token);
+                            }, {
+								fileSize: {$_W['setting']['upload']['audio']['limit']}
+							});
+                            setTimeout(function(){
+                               $(".js-video-{$key}").append('<div class="btn-intro" style="position:absolute;color:#d7d7d7;top:54px;line-height: 1.2; left:0; right:0;"><span{if $form['essential']==1} class="must"{/if}>上传视频</span></div>')
+                            },1000);
+                        </script>
+                    </div>
+                </div>
+                <p></p>
+            {/if}
+            {php $key++;}
+        {/if}
+        {/loop}
+        {if $_W['_config']['joinmsg']}
+        <p></p>
+        <div style="background:#FFF;overflow:hidden">
+            <div class="mui-content-padded">
+                <textarea id="textarea" class="mui-input-clear" name="msg" placeholder="给主办方留言" style="padding:3px;"></textarea>
+            </div>
+        </div>
+        {/if}
+        <p>&nbsp;</p>
+    </div>
+</div>
+</form>
+<script type="text/javascript">
+mui('.mui-scroll-wrapper').scroll();
+$(function(){
+	$('input[type=text]').each(function(key){
+		if ($(this).attr("readonly")) $(this).attr('onfocus','this.blur()');
+	});
+	var oldMoble = "{$formdata_common['mobile']}";
+	$('.js-check-mobile').on("tap",function(e) {
+		if (!$('#smscode').parent().hasClass('active')){
+			$('#smscode').parent().show().addClass('active');
+			$('#mobile').removeAttr('onfocus');
+			$(this).find('span').text('取消变更');
+		}else{
+			$('#smscode').parent().hide().removeClass('active');
+			$('#mobile').attr('onfocus','this.blur()').val(oldMoble).blur();
+			$(this).find('span').text('点此变更');
+		}
+	});
+
+	{if $_W['_config']['smsswitch']}
+	var issend=true;//短信初始控制开关
+	if($.getCookie("captcha")){  
+		var count = $.getCookie("captcha");  
+		var btn = $('#get_code');  
+		btn.html(count+"秒后可重发");
+		issend=false;
+		var resend = setInterval(function(){  
+			count--;  
+			if (count > 0){  
+				btn.html(count+"秒后可重发");
+				$.setCookie("captcha", count);
+			}else {  
+				clearInterval(resend);  
+				btn.html("获取验证码");
+				issend=true;
+				$.delCookie("captcha");
+			}  
+		}, 1000);  
+	}
+	$("#get_code").on("tap",function() {
+		if(issend){ 
+			//验证电话号码手机号码 
+			var phoneObj = document.getElementById('mobile');
+			if (phoneObj.value != ""){  
+				var phoneVal=phoneObj.value;  
+				if (!util.mobile(phoneVal)){
+					phoneObj.value='';
+					util.alert('手机号不合法', ' ', function() {
+						phoneObj.focus(); 
+					}); 
+					return false;  
+				}else{ 
+					issend=false; 
+					var btn = $(this);  
+					var count = 60;  
+					var resend = setInterval(function(){  
+						count--;  
+						if (count > 0){  
+							btn.html(count+"秒后可重发");  
+							$.setCookie("captcha", count);
+						}else {  
+							clearInterval(resend);  
+							issend=true;
+							btn.html("获取验证码");
+							$.delCookie("captcha");
+						}  
+					}, 1000);
+					$.ajax({
+						type: 'POST',
+						url: "{php echo app_url('api/sendsms/code')}&mobile="+phoneVal,
+						dataType: 'json',
+						success: function(data){
+							console.log(data);
+							if(data.hasOwnProperty("result") || data.Code=='OK'){
+								util.toast('发送成功');
+							}else{
+								var err_msg = data.hasOwnProperty("Message") ? data.Message : data.sub_msg;
+								util.alert(err_msg, ' ', function() {return false;});
+							}
+						},
+						error:function(){
+							util.alert('服务器错误, 请联系官方人员', ' ', function() {return false;});
+						}
+					});
+				} 
+			}else{ 
+				util.toast('手机不能为空',"","error");
+				return false; 
+			} 
+		} 
+	});
+	{/if}
+});
+//数据发送
+function postData(){
+	$("input[name='submit_btn']").val('信息提交中...').attr("disabled", "true");
+	$.post("{php echo app_url('order/edit')}", $("#formdata").serialize(), function(data){
+		if (data.status){
+			console.log(data);
+			util.tips(data.result.message);
+			location.href = data.result.url;
+		}else{
+			util.tips('服务器错误！');
+		}
+	},"json");
+}
+//校验表单
+function check(form) {
+	var checksubmit = true,value='';
+	{if $sysform['realname']['show']!='0'}
+	if ($.trim(form['member[realname]'].value) == '') {
+		util.alert('请输入姓名', ' ', function() {
+			$(form['member[realname]']).focus();
+		});
+		return false;
+	}
+	{/if}
+	{if $sysform['mobile']['show']!='0'}
+	if (!form['member[mobile]'].value) {
+		util.alert('请输入手机号', ' ', function() {
+			$(form['member[mobile]']).focus();
+		});
+		return false;
+	}else{
+		 var mobile = $('#mobile').val();
+		 if (!util.mobile(mobile)) {
+				 util.alert('手机号不合法', ' ', function() {
+					$(form['member[mobile]']).focus();
+				 });
+				return false;
+		 }
+	}
+	{/if}
+
+	{if $_W['_config']['smsswitch']}
+	var check_tel = $('#smscode').parent().hasClass('active');
+	if (check_tel){
+		if (!form['smscode'].value) {
+			util.alert('请输入验证码', ' ', function() {
+				$("input[name='smscode']").focus();
+			});
+			return false;
+		}else{
+			var smscode = $('#smscode').val();		  
+			if ($.getCookie("sms_code")!=smscode) {
+				util.alert('验证码不正确', ' ', function() {
+					$("input[name='smscode']").focus();
+				});
+				return false;
+			}else if(form['member[mobile]'].value!=$.getCookie("sms_mobile")){
+				util.alert('当前手机号与验证码不符', ' ', function() {
+					$(form['member[mobile]']).focus();
+				});
+				return false;
+			}
+		}
+	}
+	{/if}
+	
+	$(form['essential']).each(function(){
+		var inputkey = $(this).val();
+		var formtype = $(this).data('type');
+		var inputName = 'form_item_val_'+$(this).val();
+		if (inputkey!=''){
+			if ($(form[inputName+'[]']).length || formtype=='6'){
+				inputName = inputName+'[]';
+				if ($(form[inputName]).attr("type")=='checkbox' && $('input:checkbox[name="'+inputName+'"]:checked').length == 0) {
+					util.alert($(this).attr("title")+'为必选项', ' ', function() {
+						$(form[inputName]).focus();
+					});
+					checksubmit = false;
+				}else if(formtype=='6' && !$(form[inputName]).length){
+					util.alert($(this).attr("title")+'不能为空', ' ', function() {});
+					checksubmit = false;
+				}
+			}else if($(form[inputName+'[province]']).length){
+				if (!form[inputName+'[province]'].value) {
+					util.alert($(this).attr("title")+'为必选项', ' ', function() {
+						$('.mui-district-picker-'+inputName).trigger('tap');
+					});
+					checksubmit = false;
+				}
+			}else if(formtype=='10'){
+				if (!util.mobile($(form[inputName]).val())){
+					util.alert($(this).attr("title")+'不合法', ' ', function() {
+						$(form[inputName]).focus();
+					});
+					checksubmit = false;
+				}
+			}else{
+				if ($.trim(form[inputName].value)=="" && $(form[inputName]).attr("type")!='radio' && !$(form[inputName]).next().val()) {
+					var msg = $(form[inputName]).siblings('.mui-calendar-picker'+inputkey).length?'为必选项':'不能为空';
+					util.alert($(this).attr("title")+msg, ' ', function() {
+						if (formtype=='3' || formtype=='4'){
+							$(form[inputName]).focus();
+						}
+						$(form[inputName]).siblings('.mui-calendar-picker'+inputkey).trigger('tap')
+						$(form[inputName]).trigger('tap');
+
+					});
+					checksubmit = false;
+				}else if($(form[inputName]).attr("type")=='radio' && $('input:radio[name="'+inputName+'"]:checked').length == 0){
+					util.alert($(this).attr("title")+'为必选项', ' ', function() {
+						$(form[inputName]).focus();
+						$(form[inputName]).trigger('tap');
+					});
+					checksubmit = false;
+				}
+			}
+		}else{
+			inputName = "member["+formtype+"]";
+			var typeStr = "education,birthyear,resideprovince,constellation,zodiac,bloodtype";
+			if (typeStr.indexOf(formtype)>-1){
+					if (formtype=='birthyear' && $(form['birth']).val()==""){
+						util.alert($(this).attr("title")+'为必选项', ' ', function() {
+							$(form['birth']).trigger('tap');
+						});
+						checksubmit = false;
+					}else if(formtype=='resideprovince' && $('.mui-district-picker-reside').val()==""){
+						util.alert($(this).attr("title")+'为必选项', ' ', function() {
+							$('.mui-district-picker-reside').trigger('tap');
+						});
+						checksubmit = false;
+					}else if ($(form[formtype]).val()==""){
+						util.alert($(this).attr("title")+'为必选项', ' ', function() {
+							$(form[formtype]).siblings('.mui-'+formtype+'-picker').trigger('tap');
+						});
+						checksubmit = false;
+					}					
+			}else if($.trim($(form[inputName]).val())=="" && $(form[inputName]).length){
+				util.alert($(this).attr("title")+'不能为空', ' ', function() {
+					$(form[inputName]).focus();
+				});
+				checksubmit = false;
+			}else{
+				if (formtype == 'idcard' && !util.idcard($(form[inputName]).val())){
+					util.alert($(this).attr("title")+'不合法', ' ', function() {
+						$(form[inputName]).focus();
+					});
+					checksubmit = false;
+				}
+			}
+		}
+		if (!checksubmit) return false;
+	});
+
+	if (checksubmit){
+		postData();
+	}
+	return false;
+}
+</script>
+{fx_template 'common/footer'}

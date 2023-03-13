@@ -1,0 +1,97 @@
+{if $ii==0}
+    <div class="mui-input-row{if $form['essential']==1} js-check-fields{/if}" data-title="{$form['title']}" data-type="{$form['fieldstype']}">
+	{if $form['fieldstype']=='age'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[{$form[fieldstype]}]" value="{$profile['age']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='studentid'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[studentid]" value="{$profile['studentid']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='zipcode'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[zipcode]" value="{$profile['zipcode']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='qq'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[qq]" value="{$profile['qq']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='weight'}
+        {php $placeholder = $form['essential']==1 ? $form['title'] . '：单位kg' . ' (必填)':$form['title'];}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[weight]" value="{$profile['weight']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='height'}
+        {php $placeholder = $form['essential']==1 ? $form['title'] . '：单位cm' . ' (必填)':$form['title'];}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[height]" value="{$profile['height']}" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='gender'}	
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('gender', $profile['gender'], $placeholder, $ii);}
+    {elseif $form['fieldstype']=='birthyear'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('birth', array('year' => $profile['birthyear'], 'month' => $profile['birthmonth'], 'day' => $profile['birthday']), $placeholder, $ii);}
+    {elseif $form['fieldstype']=='resideprovince'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('reside', array('province' => $profile['resideprovince'], 'city' => $profile['residecity'], 'district' => $profile['residedist']), $placeholder, $ii);}
+    {elseif $form['fieldstype']=='education'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('education', $profile['education'], $placeholder, $ii);}
+    {elseif $form['fieldstype']=='constellation'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('constellation', $profile['constellation'], $placeholder, $ii);}
+    {elseif $form['fieldstype']=='zodiac'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('zodiac', $profile['zodiac'], $placeholder, $ii);}
+    {elseif $form['fieldstype']=='bloodtype'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('bloodtype', $profile['bloodtype'], $placeholder, $ii);}
+    {else}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_fans_form('member_'.$ii.'['.$form['fieldstype'].']', $profile[$form['fieldstype']], $placeholder);}
+    {/if}
+    </div>
+{else}
+    <div class="mui-input-row{if $form['essential']==1} js-check-fields{/if}" data-title="{$form['title']}" data-type="{$form['fieldstype']}">
+    {if $form['fieldstype']=='age'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[{$form[fieldstype]}]" value="" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='studentid'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[studentid]" value="" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='zipcode'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[zipcode]" value="" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='qq'}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[qq]" value="" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='weight'}
+        {php $placeholder = $form['essential']==1 ? $form['title'] . '：单位kg' . ' (必填)':$form['title'];}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[weight]" value="" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='height'}
+        {php $placeholder = $form['essential']==1 ? $form['title'] . '：单位cm' . ' (必填)':$form['title'];}
+        <label>{$form['title']}</label>
+        <input type="number" name="member_{$ii}[height]" value="" placeholder="请填写{$placeholder}" pattern="[0-9]*">
+    {elseif $form['fieldstype']=='gender'}	
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('gender', '', $placeholder, $ii);}
+    {elseif $form['fieldstype']=='birthyear'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('birth', array('year' => '', 'month' => '', 'day' => ''), $placeholder, $ii);}
+    {elseif $form['fieldstype']=='resideprovince'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('reside', array('province' => '', 'city' => '', 'district' => ''), $placeholder, $ii);}
+    {elseif $form['fieldstype']=='education'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('education', '', $placeholder, $ii);}
+    {elseif $form['fieldstype']=='constellation'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('constellation', '', $placeholder, $ii);}
+    {elseif $form['fieldstype']=='zodiac'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('zodiac', '', $placeholder, $ii);}
+    {elseif $form['fieldstype']=='bloodtype'}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_form_field('bloodtype', '', $placeholder, $ii);}
+    {else}
+        <label>{$form['title']}</label>
+        {php echo tpl_app_fans_form('member_'.$ii.'['.$form['fieldstype'].']', '', $placeholder);}
+    {/if}
+    </div>
+{/if}

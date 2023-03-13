@@ -1,0 +1,9 @@
+{fx_template 'perm/perms'}
+{if perm('perm.role')}
+{else}
+<script language='javascript'>
+    $(function(){
+        //$(':checkbox').attr('disabled',true);
+    })
+</script>
+{/if}

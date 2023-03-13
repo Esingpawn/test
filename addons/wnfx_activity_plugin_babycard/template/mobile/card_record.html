@@ -1,0 +1,101 @@
+{fx_template 'common/header'}
+    <div class="mui-content" style="z-index:1">
+    	<ul class="mui-table-view mui-afterbefore-no">
+            <li class="mui-table-view-cell">
+            购买期限
+            <span class="mui-badge mui-badge-inverted">{php echo $cycletype==1?"月":($cycletype==2?"季":"年");}</span>
+            </li>
+            <li class="mui-table-view-cell">
+             购买数量
+            <span class="mui-badge mui-badge-inverted">×{$buynum}</span>
+            </li>
+            <li class="mui-table-view-cell">
+            订单金额
+            <span class="mui-badge mui-badge-inverted mui-rmb mui-text-rmb">{$fee} 元</span>
+            </li>
+        </ul>
+        
+        <ul class="mui-table-view mui-afterbefore-no">
+            <li class="mui-table-view-cell">
+            联系人姓名
+            <span class="mui-badge mui-badge-inverted">{$_W['member']['realname']}</span>
+            </li>
+            <li class="mui-table-view-cell">
+            手机号码
+            <span class="mui-badge mui-badge-inverted">{$_W['member']['mobile']}</span>
+            </li>
+        </ul>
+        <p style="margin-left:12px;margin-top:10px">绑定亲友信息</p>
+        <ul class="mui-table-view mui-afterbefore-no">
+            <li class="mui-table-view-cell">
+            亲友姓名
+            <span class="mui-badge mui-badge-inverted">{php echo !empty($friend['realname'])?$friend['realname']:'默认本人'}</span>
+            </li>
+        </ul>
+        <div class="mui-content-padded" style="padding-top:10px;">
+			<button class="mui-btn mui-btn-success mui-btn-block js-wechat-pay" type="submit" value="提交" name="submit">立即支付</button>
+            <input type="hidden" name="body" value="年卡" />
+            <input type="hidden" name="id" value="{$card['id']}" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+            <div class="mui-text-center mui-mt15 mui-mb15" style="font-size:12px">
+				完成支付后，即可成功激活，享受特权
+			</div>
+		</div>
+    </div>
+
+	<script>
+    $('.js-wechat-pay').click(function(){
+		wx.miniProgram.getEnv(function (res) {
+			if (res.miniprogram) { //只有在小程序环境下，才跳转到小程序支付页面去支付，否则的话都是跳转到订单详情去让它重新选支付方式。
+				wx.miniProgram.navigateTo({ //这将唤起小程序的原生页面
+					url: "/wnfx_activity/pages/pay/pay?type=card&orderid={$paydata['tid']}"
+				})
+			}else {
+				//先通过AJAX获取最新的订单号
+				$.getJSON("{php echo app_url('paycenter', array('op' => 'pay', 'payopenid'=>$payopenid, 'from'=>$_GPC['from']))}",{'id':"{$rid}"}, function(m){
+					if(!m.errno){
+						WeixinJSBridge.invoke('getBrandWCPayRequest', {
+							appId: m.data.appid ? m.data.appid : m.data.appId,
+							timeStamp: m.data.timeStamp+'',
+							nonceStr: m.data.nonceStr,
+							package: m.data.package,
+							signType: m.data.signType,
+							paySign: m.data.paySign
+						}, function(res) {
+							if("get_brand_wcpay_request:ok" == res.err_msg) {
+								util.program.navigate("{php echo $_SESSION['from_url']}");
+							}else if ("get_brand_wcpay_request:cancel" == res.err_msg){
+								util.tips('已取消支付');
+							}else {
+								util.tips(res.err_msg);
+							}
+						});
+						/*util.pay({
+							orderFee : data.fee,
+							payMethod : 'wechat',
+							orderTitle : '年卡购买费用' + data.fee + '元',
+							orderTid : data.ordertid,
+							module : data.module,
+							success : function(result) {
+								util.tips('支付成功');
+								setTimeout(function(e) {
+									util.program.navigate("{php echo $_SESSION['from_url']}");
+								},100);
+							},
+							fail : function(result) {
+								util.tips('支付失败 : ' + result.message);
+							},
+							complete : function(result) {
+								//{"errno";-1,"message":"get_brand_wcpay_request:cancel"}
+								if (result.errno==-1){
+									util.tips('取消支付');
+								}
+							}
+						});*/
+					}
+				});
+			}
+		});
+	});
+    </script>
+{fx_template 'common/footer'}

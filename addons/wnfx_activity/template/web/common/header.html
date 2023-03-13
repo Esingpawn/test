@@ -1,0 +1,111 @@
+{fx_template 'common/header-base'}
+{if !MERCHANTID}
+{php $frames = buildframes(FRAME);_calc_current_frames($frames);}
+{/if}
+<div data-skin="default" class="skin-default main-lg-body">
+<div class="main">
+{if !defined('IN_MESSAGE')}
+<div class="container">
+	<div class="panel panel-content main-panel-content {if !empty($frames['section']['platform_module_menu']['plugin_menu'])}panel-content-plugin{/if}">
+		<div class="content-head panel-heading main-panel-heading">
+        {if !MERCHANTID}
+			{if ($_GPC['c'] != 'cloud' && !empty($_GPC['m']) && !in_array($_GPC['m'], array('keyword', 'special', 'welcome', 'default', 'userapi', 'service'))) || defined('IN_MODULE')}
+				{fx_template 'common/header-module'}
+			{else}
+				{fx_template 'common/header-' . FRAME}
+			{/if}
+        {else}
+        	{fx_template 'common/header-module'}
+        {/if}
+		</div>
+	<div class="panel-body clearfix main-panel-body {if !empty($_W['setting']['copyright']['leftmenufixed'])}menu-fixed{/if}">
+    	<style>.panel-content-plugin .panel-menu .list-group-item:not(.list-group-more){padding-left:30px;}</style>
+		<div class="left-menu">
+        {php fx_load()->func('tpl');}
+        {php $getlistFrames = 'get'.$controller.'Frames';}
+        {php $_frames = $getlistFrames();}
+        {php $_frames = empty($_frames) ? $GLOBALS['frames'] : $_frames; _calc_current_frames2($_frames);}
+        {if MERCHANTID}
+            <style>.left-menu .fa{width:14px;}</style>
+			<div class="left-menu-content">
+            	{loop $_frames $k $frame}
+                <div class="panel panel-menu">
+                    <div class="panel-heading">
+                        <span class="no-collapse">{$frame['title']}</span>
+                    </div>
+                    <ul class="list-group">
+                        {loop $frame['items'] $link}
+                        <li class="list-group-item {$link['active']}">
+                            <a href="{$link['url']}" class="text-over">{$link['title']}</a>
+                        </li>
+                        {/loop}
+                    </ul>
+                </div>
+                {/loop}
+			</div>
+        {else}
+        	<style>.left-menu .no-fa .fa{display:none}</style>
+        	{if empty($frames['section']['platform_module_menu']['plugin_menu'])}
+            <div class="left-menu-content">
+                {loop $_frames $k $frame}                               
+                <div class="panel panel-menu">
+                    <div class="panel-heading" style="padding-left:0;">
+                        <span class="no-collapse no-fa">{php echo str_replace('&nbsp;','',$frame['title'])}<i class="wi wi-appsetting pull-right setting"></i></span>
+                    </div>
+                    <ul class="list-group panel-collapse">
+                        {loop $frame['items'] $link}
+                        <li class="list-group-item {$link['active']}">
+                            <a href="{$link['url']}" class="text-over">{php echo str_replace('&nbsp;','',$link['title'])}</a>
+                        </li>
+                        {/loop}                            
+                    </ul>
+                </div>
+                {/loop}
+            </div>
+        	{else}
+            <div class="plugin-menu clearfix">
+                <div class="plugin-menu-main pull-left">
+                    <ul class="list-group">
+                        <li class="list-group-item{if $_W['current_module']['name'] == $frames['section']['platform_module_menu']['plugin_menu']['main_module']} active{/if}">
+                            <a href="{php echo url('home/welcome/ext', array('m' => $frames['section']['platform_module_menu']['plugin_menu']['main_module']))}">
+                                <i class="wi wi-main-apply"></i>
+                                <div>主应用</div>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <div>插件</div>
+                        </li>
+                        {loop $frames['section']['platform_module_menu']['plugin_menu']['menu'] $plugin_name $plugin}
+                        <li class="list-group-item{if $_W['current_module']['name'] == $plugin_name} active{/if}">
+                            <a href="{php echo url('home/welcome/ext', array('m' => $plugin_name))}">
+                                <img src="{$plugin['icon']}" alt="" class="img-icon" />
+                                <div>{$plugin['title']}</div>
+                            </a>
+                        </li>
+                        {/loop}
+                    </ul>
+                    {php unset($plugin_name);}
+                    {php unset($plugin);}
+                </div>
+                <div class="plugin-menu-sub pull-left"> 
+                	{loop $_frames $k $frame}                               
+                    <div class="panel panel-menu">
+                        <div class="panel-heading" style="padding-left:0;">
+                        	<span class="no-collapse no-fa">{php echo str_replace('&nbsp;','',$frame['title'])}<i class="wi wi-appsetting pull-right setting"></i></span>
+                        </div>
+                        <ul class="list-group panel-collapse">
+                        	{loop $frame['items'] $link}
+                            <li class="list-group-item {$link['active']}">
+                                <a href="{$link['url']}" class="text-over"><i class="fa fa-cog"></i>{php echo str_replace('&nbsp;','',$link['title'])}</a>
+                            </li>
+                            {/loop}                            
+                        </ul>
+                    </div>
+                    {/loop}
+            	</div>
+            </div>
+            {/if}
+        {/if}
+		</div>
+		<div class="right-content">
+{/if}

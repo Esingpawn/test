@@ -1,0 +1,86 @@
+{fx_template 'common/header'}
+<style>
+.material-appmsg-list{position:relative;margin:0}
+.material-appmsg-item{width:230px;border: 1px solid #e8e9eb;}
+.material-appmsg-item .appmsg-thumb{
+	width:160px; margin:auto;height: 160px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;}
+
+.appmsg-desc{text-align:center;color:#999;margin:0 15px;white-space:normal!important;line-height:1.5;padding:0;font-size:50%}
+.material-appmsg-item .appmsg-info{font-size: 13px;line-height: 20px;margin: 0 14px;padding: 12px 0;border-bottom: 1px solid #e8e9eb;}
+.material-appmsg-item .appmsg-item{
+	position: relative;
+    padding: 12px 14px;
+}
+.material-appmsg-item .appmsg-opr{
+	background-color: #f4f4f4;
+    border-top: 1px solid #e8e9eb;
+    margin-right: -1px;
+}
+.material-appmsg-item .appmsg-opr li:first-child:nth-last-child(2), .material-appmsg-item .appmsg-opr li:first-child:nth-last-child(2)~li {
+    width: 50%;
+}
+.material-appmsg-item .appmsg-opr-item{
+	float: left;
+    line-height: 44px;
+    height: 44px;
+    background-color: #f4f4f4;
+}
+.material-appmsg-item .appmsg-opr-item a{
+	display: block;
+    border-right: 1px solid #e8e9eb;
+    text-align: center;
+    text-decoration: none;
+    color: #999;
+}
+</style>
+<div class="page-header">当前位置：<span class="text-primary">验票签到</span></div>
+<div class="page-content">
+    <form action="" method="post" class="form-horizontal form-validate" enctype="multipart/form-data" style="" novalidate="novalidate">
+        <div class="tabs-container" style="">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a href="#tab_code">签到码</a></li>
+            </ul>
+            <div class="tab-content " style="">
+                <div class="tab-pane  active" id="tab_code">
+                    <div class="material-appmsg-list">
+                        {loop $qrcode $item}
+                        <div class="material-appmsg-item">
+                            <div class="appmsg-content">
+                                <div class="appmsg-info">
+                                    <em class="appmsg-date">{$item['name']}</em>
+                                    <i class="wi wi-qrcode pull-right" style="font-size:20px;"></i>
+                                </div>
+                                <div class="appmsg-item">
+                                    <h4 class="appmsg-title">
+                                        <a href="" target="-blank"></a>
+                                    </h4>
+                                    <div class="appmsg-thumb" style="background-image:url('{php echo tomedia($item['qr'])}')"></div>
+                                    <p class="appmsg-desc">{$item['desc']}</p>
+                                </div>
+                            </div>
+                            <div class="appmsg-opr">
+                                <ul>
+                                    <li class="appmsg-opr-item">
+                                        <a href="javascript:;" data-clipboard-text="{$item['url']}" data-url="{$item['url']}" class="js-clip" title="复制链接">复制链接</a>
+                                    </li>
+                                    <li class="appmsg-opr-item">
+                                        <a href="{php echo web_url('records/checkin/down',array('id'=>$aid,'name'=>$item['name']))}">下载</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+</script>
+{fx_template 'common/footer'}

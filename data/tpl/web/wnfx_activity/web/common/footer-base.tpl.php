@@ -1,0 +1,24 @@
+<?php defined('IN_IA') or exit('Access Denied');?><script language="javascript">
+    require(['bootstrap'], function ($) {
+        $('[data-toggle="tooltip"]').tooltip("destroy").tooltip({
+            container: $(document.body)
+        });
+        $('[data-toggle="popover"]').popover("destroy").popover({
+            container: $(document.body)
+        });
+    });
+	myrequire(['web/init']);
+	if($('form.form-validate').length<=0){
+		window.formInited = true;
+	}
+	window.formInitTimer = setInterval(function () {
+		if (typeof(window.formInited ) !== 'undefined') {
+			$('#page-loading').remove();
+			clearInterval(window.formInitTimer);
+		}else{
+			//$('#page-loading').show();
+		}
+	}, 1);
+</script>
+</body>
+</html>

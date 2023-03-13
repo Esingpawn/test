@@ -1,0 +1,49 @@
+{fx_template 'common/header'}
+<style>
+.input-group-addon .radio-inline, .input-group-addon .checkbox-inline {
+    padding-top: 0;
+    line-height: 0.95;
+}
+.multi-img-details .multi-item{height:auto}
+</style>
+<div class="page-header">
+    当前位置：<span class="text-primary">
+    {if !MERCHANTID}
+    	{if !empty($item['id'])}编辑{else}添加{/if}商户 <small>{if !empty($item['id'])}修改【{$item['name']}】{/if}</small> 	
+    {else}
+    	系统设置
+    {/if}
+    </span>
+</div>
+<div class="page-content">
+<form action="" method="post" class="form-horizontal form-validate">
+	<input type="hidden" id="tab" name="tab" value="#tab_{$tab}">
+    <div class="tabs-container">
+        <ul class="nav nav-tabs" id="myTab">
+            <li{if empty($_GPC['tab']) || $_GPC['tab']=='basic'} class="active"{/if}><a href="#tab_basic">基本</a></li>
+            <li{if $_GPC['tab']=='mcert'} class="active"{/if}><a href="#tab_mcert">认证信息</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane {if empty($_GPC['tab']) || $_GPC['tab']=='basic'}active{/if}" id="tab_basic">{fx_template 'merch/user/basic'}</div>
+            <div class="tab-pane {if $_GPC['tab']=='mcert'}active{/if}" id="tab_mcert">{fx_template 'merch/user/mcert'}</div>
+    	</div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg control-label"></label>
+        <div class="col-sm-9 col-xs-12">
+            <input type="submit"  value="提交" class="btn btn-primary" />
+        	<a class="btn btn-default" href="{php echo web_url('merch/user')}">返回列表</a>
+        </div>
+    </div>
+</form>
+</div>
+<script>
+require(['bootstrap'], function () {
+	$('#myTab a').click(function (e) {
+		$('#tab').val( $(this).attr('href'));
+		e.preventDefault();
+		$(this).tab('show');
+	})
+});
+</script>
+{fx_template 'common/footer'}

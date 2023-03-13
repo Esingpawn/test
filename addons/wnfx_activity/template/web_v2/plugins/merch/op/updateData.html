@@ -1,0 +1,78 @@
+<style>.modal-dialog{width:65%}.modal-dialog .modal-body{max-height:450px;}</style>
+<form class="form-horizontal form-validate" action="{php echo web_url('merch/op/updateData')}" method="post" enctype="multipart/form-data">
+    <input type='hidden' name='id' value='{$id}' />
+    <div class="modal-dialog">
+           <div class="modal-content">
+           <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">{php echo MERCHANTID?'提现':'结算'}</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-responsive" style="table-layout:auto;">
+                    <tbody>
+                        <tr>
+                            <td><image src="{php echo tomedia($item['logo']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"></td>
+                            <td>{$item['name']}</td>
+                            <td>总成交额：{if $account['amount']}{$account['amount']}元{else}0.00元{/if}</td>
+                            <td>目前可结算金额：{if $account['no_money']}{$account['no_money']}元{else}0.00元{/if}</td>
+                            <td>上缴佣金：{php echo currency_format($account['no_money']*$item['percent']*0.01);}元</td>
+                            <td>佣金百分比：{if !empty($item['percent'])}{$item['percent']}%{else}0.00%{/if}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        数据统计：以下数据根据订单统计得到，若<font color="red" size="3">删除</font>过订单或则结算记录，则统计<font color="red" size="3">不准</font>！！！请自行统计，并更改！
+                    </div>
+                    <div class="panel-body">
+                         <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-lg-3 control-label">【根据订单统计】总交易金额：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-1">
+                                <div class="form-control-static">{$zm} 元</div>
+                            </div>
+                            <label class="col-xs-12 col-sm-3 col-lg-2 control-label">当前数据：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-2">
+                                <div class="form-control-static">{$account['amount']} 元</div>
+                            </div>
+                             <label class="col-xs-12 col-sm-3 col-lg-2 control-label">更改总交易金额：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-2 pull-left">
+                                <input class="form-control" name="amount" id="" type="text" value="{$_GPC['amount']}" placeholder="手动输入金额">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-lg-3 control-label">【根据结算记录统计】已结算金额：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-1">
+                                <div class="form-control-static">{$rm} 元</div>
+                            </div>
+                            <label class="col-xs-12 col-sm-3 col-lg-2 control-label">当前数据：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-2">
+                                <div class="form-control-static">{$rm} 元</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12 col-sm-3 col-lg-3 control-label">【根据订单统计】总可结算金额：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-1">
+                                <div class="form-control-static">{$km} 元</div>
+                            </div>
+                             <label class="col-xs-12 col-sm-3 col-lg-2 control-label">目前可结算金额：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-2">
+                                <div class="form-control-static">{$account['no_money']} 元</div>
+                            </div>
+                             <label class="col-xs-12 col-sm-3 col-lg-2 control-label">更改目前可结算金额：</label>
+                            <div class="col-sm-9 col-xs-12 col-lg-2 pull-left">
+                                <input class="form-control" name="no_money" id="" type="text" value="{$_GPC['no_money']}" placeholder="手动输入金额">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        	<label class="col-xs-12 col-sm-3 col-lg-8 control-label">目前可结算金额 = 总可结算金额 - 已结算金额；	</label>
+                        </div>
+                	</div>
+            	</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">提交</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">取消</button>
+            </div>
+        </div>
+    </div>
+</form>

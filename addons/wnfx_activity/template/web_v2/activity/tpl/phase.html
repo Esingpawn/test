@@ -1,0 +1,112 @@
+<style>
+.tables{border:1px solid #e5e5e5;line-height: 18px;overflow:hidden}
+.tables:hover{border:1px solid #b1d8f5}
+.table-row{border-bottom:1px solid #efefef; background:#FFF}
+.table-row:last-child{border: none;}
+.table-row,.table-header,.table-footer,.table-top{display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;justify-content: center;-webkit-justify-content: center;-webkit-align-content: space-around;align-content: space-around}
+.tables .table-row>div{text-align:center;padding: 14px 10px}
+.tables .table-row>div>input{text-align:center;color:#666}
+.tables .table-row.table-top>div{margin: 0 !important;padding: 16px 0}
+.tables .table-row .ops.list-inner{border-right:none}
+.tables .list-inner{border-right: 1px solid #efefef;vertical-align: middle}
+.tables .list-inner .btn~.btn{margin-top:3px}
+.table-row .goods-des .title{overflow: hidden;text-overflow: ellipsis}
+.table-row .goods-des{width:260px;border-right: 1px solid #efefef;vertical-align: middle}
+.table-row .goods-des.singleRefund{padding: 0px !important;display: flex;flex-direction: column;margin: 0 !important}
+.table-row .goods-des.singleRefund{padding: 16px 0}
+.table-row .goods-des.singleRefund .goodsRefund{border-bottom: 1px solid #efefef;flex-direction: initial;margin: 0 !important}
+.table-row .list-inner{-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;}
+.table-row .columnFlex{text-align: center;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;-webkit-align-items: center;align-items: center;-webkit-justify-content: center;justify-content: center;-webkit-flex-direction: column;flex-direction: column}
+.table-header .others{-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;text-align:center}
+.table-header .others.text-left{text-align:left;}
+.tables .ops{width:100%;display: table;}
+.tables .ops>div{width:40%;display: table-cell;vertical-align: middle;}
+.tables .ops>.op{padding:0 5px;cursor:pointer}
+.tables .table-con{padding:0;display:block;}
+.tables .table-con.active{border: 1px solid #0099e9}
+.tables .table-con>.table-row.fold-inner{display:none}
+.tables .table-con>.table-row .tables{padding:0;border:none;border-top: 1px solid #e5e5e5}
+.tables .table-con>.table-row .tables:hover{border-top: 1px solid #e5e5e5;}
+.tables .table-con:last-child>.table-row{border:none}
+</style>
+<span class="text-primary">共{php echo count($specs[0])}场， 从{$item['starttime']}至{$item['endtime']}</span>
+<div class="table-responsive" style="margin:15px 0">           	
+    <div class="tables" style="max-height:500px;overflow: auto;">
+    <input type="hidden" name="activity[phasetype]" value="{$item['phasetype']}">
+    <input type="hidden" name="activity[hasoption]" value="2">
+    <input type="hidden" name="starttime" value="{$item['starttime']}">
+    <input type="hidden" name="endtime" value="{$item['endtime']}">    
+    {loop $specs[0] $i $spec}
+    	<div class="table-con" data-id="{$spec['id']}">
+            <div class="table-row">
+                <div class="goods-des columnFlex">
+                    <span>{$spec[title]}</span>
+                    <input type="hidden" name="spec_title[{$spec['id']}]" class="form-control" value="{$spec[title]}">
+                    <input name="spec_id[]" type="hidden" class="form-control spec_id" value="{$spec['id']}"/>
+                </div>
+                <div class="list-inner columnFlex">
+                    <div class="ops"><div>{php echo tpl_form_field_clock("clock1[".$spec['id']."]", $spec['clock1']);}</div><div style="width:20%">至</div><div>{php echo tpl_form_field_clock("clock2[".$spec['id']."]", $spec['clock2']);}</div></div>
+                </div>
+                <div class="columnFlex" style="width:150px">
+                    <div class="ops">
+                        <a class="op text-primary" onclick="delSpec(this)">删除场次</a>
+                        <a class="op text" onclick="showPhase(this)"><i class="icow icow-tianjia"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="table-row table-top fold-inner">
+                <div class="table-header" style="background:#f7f7f7">
+                    <div style="border-left:1px solid #f2f2f2;width:260px;text-align:center;">票种名称</div>
+                    <div class="others">票价（元）</div>
+                    <div class="others">尊享会员价(元)<i class="wi wi-info text-danger" data-toggle="tooltip" data-placement="top" data-original-title="只有支持年卡才生效。"></i></div>
+                    <div class="others">数量</div>
+                    <div class="others">操作</div>
+                </div>
+                <div class="tables spec_items">
+                	{loop $spec['items'] $key $specitem}
+                    {fx_template 'activity/tpl/phase_item'}
+                    {/loop}
+                    <div class="table-footer" style="padding:20px;background:#fff">
+                        <div style="margin-left:1px;flex:unset;">
+                            <button class="btn btn-default btn-primary-o" type="button" onclick='addSpecItem1(this,"{$spec['id']}")'><i class="fa fa-plus"></i> 添加票种</button>  
+                        </div>                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/loop}
+    </div>
+</div>
+<script>
+$('.spec_items').on('input propertychange change', '.title', function () {
+	$(this).prev().val($(this).val());
+});
+
+function showPhase(obj){
+	var $e = $(obj).parents('.table-con');
+	if (!$e.toggleClass('active').find('.fold-inner').is(":visible")){
+		$e.siblings().removeClass('active').find('.fold-inner').slideUp();
+	}
+	$e.find('.fold-inner').slideToggle();
+}
+
+$(function(){
+    if ($.validator) {
+        $.validator.prototype.elements = function () {
+			var validator = this,
+				rulesCache = {};
+			return $(this.currentForm)
+			.find("input, select, textarea")
+			.not(":submit, :reset, :image, [disabled]")
+			.not(this.settings.ignore)
+			.filter(function () {
+				if (!this.name && validator.settings.debug && window.console) {
+					console.error("%o has no name assigned", this);
+				}
+				rulesCache[this.name] = true;
+				return true;
+			});
+        }
+    }
+});
+</script>

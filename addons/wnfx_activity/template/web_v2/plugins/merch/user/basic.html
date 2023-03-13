@@ -1,0 +1,193 @@
+<div class="form-group">
+    <label class="col-lg control-label must">商户名称</label>
+    <div class="col-sm-8 col-xs-12">
+        <input type="text" name="merchant[name]" class="form-control" value="{$item['name']}" data-rule-required="true"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">商户头像</label>
+    <div class="col-sm-8 col-xs-12">
+        {php echo tpl_form_field_image('merchant[logo]', $item['logo']);}
+        <span class="help-block">图片建议为200*200</span>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-lg control-label">虚拟关注量</label>
+    <div class="col-sm-8 col-xs-12">
+            <input type="text" name="merchant[followno]" class="form-control" value="{$item['followno']}">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">主页封面</label>
+    <div class="col-sm-8 col-xs-12">
+        {php echo tpl_form_field_image('merchant[thumb]', $item['thumb']);}
+        <span class="help-block">图片建议为900*900</span>
+    </div>
+</div>
+<div class="form-group" style="display:none">
+    <label class="col-lg control-label">上传商品数量上限</label>
+    <div class="col-sm-8 col-xs-12">
+            <input type="text" name="merchant[goodsnum]" class="form-control" value="{$item['goodsnum']}">
+    </div>
+</div>
+<div class="form-group" style="display:none;">
+    <label class="col-lg control-label">虚拟销量</label>
+    <div class="col-sm-8 col-xs-12">
+            <input type="text" name="merchant[falsenum]" class="form-control" value="{$item['falsenum']}">
+    </div>
+</div>
+<div class="form-group" style="display:none">
+    <label class="col-lg control-label">实际销量</label>
+    <div class="col-sm-8 col-xs-12">
+            <input type="text" name="merchant[salenum]" class="form-control" value="{$item['salenum']}" readonly="readonly">
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-lg control-label must">联系人</label>
+    <div class="col-sm-8 col-xs-12">
+            <input type="text" name="merchant[linkman_name]" class="form-control" value="{$item['linkman_name']}" data-rule-required="true"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label must">联系电话</label>
+    <div class="col-sm-8 col-xs-12">
+            <input type="text" name="merchant[linkman_mobile]" class="form-control" value="{$item['linkman_mobile']}" data-rule-required="true"/>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">商户简介</label>
+    <div class="col-sm-8 col-xs-12">
+        <textarea style="height:200px;" name="merchant[detail]" class="form-control richtext" cols="60">{$item['detail']}</textarea>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-lg control-label">场地名称</label>
+    <div class="col-sm-8 col-xs-12">
+        <input type="text" name="merchant[storename]" class="form-control" value="{$item['storename']}" placeholder="例如：xx大厦">
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">商户位置</label>
+    <div class="col-sm-8 col-xs-12">
+    {php echo tpl_form_field_position('merchant',array('lng'=>$item['lng'],'lat'=>$item['lat'],'adinfo'=>$item['adinfo']))}
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">商户地址</label>
+    <div class="col-sm-8 col-xs-12">
+        <input type="text" name="merchant[address]" class="form-control" value="{$item['address']}" placeholder="详细地址" id="address"/>
+    </div>
+</div>
+
+{if !MERCHANTID}
+<div class="form-group-title">帐号信息</div>
+<div class="form-group">
+    <label class="col-lg control-label">后台登录权限</label>
+    <div class="col-sm-8 col-xs-12">
+        <label class="radio-inline">
+            <input type="radio" name="merchant[open]" value="1" {if intval($item['open']) !=2}checked="checked"{/if} onclick="$('#level').show();"> 是
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="merchant[open]" value="2" {if intval($item['open']) ==2}checked="checked"{/if} onclick="$('#level').hide();"> 否
+        </label>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">绑定会员</label>
+    <div class="col-sm-8 col-xs-12">
+    	{php echo tpl_selector('uid',array('value'=>!empty($bindmember['nickname'])?$bindmember['nickname']:"",'required'=>false,'preview'=>false,'key'=>'uid','text'=>'nickname','type'=>'text','placeholder'=>'昵称/姓名/手机号','buttontext'=>'选择用户 ', 'items'=>$bindmember,'url'=>web_url('member/query') ))}
+    </div>
+</div>
+{/if}
+<div id="level"{if MERCHANTID} style="display:none;"{/if}> 
+    <div class="form-group" >
+        <label class="col-lg control-label{if !MERCHANTID} must{/if}">主账户名</label>
+        <div class="col-sm-8 col-xs-12">
+        {if !MERCHANTID}
+             <input type="text" name="merchant[uname]" class="form-control" value="{$item['uname']}" data-rule-required="true"/>   
+        {else}
+        	<div class='form-control-static'>{$item['uname']}</div>
+        {/if}
+        </div>
+    </div>
+    {if !empty($item)}
+    <div class="form-group" >
+        <label class="col-lg control-label">账户密码</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="password" name="npwd" class="form-control" value="" />
+        </div>
+    </div>
+    <div class="form-group" >
+        <label class="col-lg control-label">重复密码</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="password" name="tpwd" class="form-control" value="" />
+        </div>
+    </div>
+    {else}
+    <div class="form-group" >
+        <label class="col-lg control-label must">账户密码</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="password" name="merchant[password]" class="form-control" value="{$item['password']}" data-rule-required="true"/>
+        </div>
+    </div>
+    <div class="form-group" >
+        <label class="col-lg control-label must">重复密码</label>
+        <div class="col-sm-8 col-xs-12">
+            <input type="password" name="tpwd" class="form-control" value="" data-rule-required="true"/>
+        </div>
+    </div>
+    {/if}
+</div>	
+{if !MERCHANTID}
+<div class="form-group-title">商户结算</div>
+<div class="form-group">
+    <label class="col-lg control-label">抽成比例</label>
+    <div class="col-sm-8 col-xs-12">
+        <div class="input-group">
+            <input type="text" name="merchant[percent]" class="form-control" value="{$item['percent']}" />
+            <span class="input-group-addon">%</span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label must">收款人</label>
+    <div class="col-sm-8 col-xs-12">
+        {php echo tpl_selector('openid',array('value'=>!empty($user['nickname'])?$user['nickname']:"",'required'=>true,'preview'=>false,'key'=>'openid','text'=>'nickname','type'=>'text','placeholder'=>'昵称/姓名/手机号','buttontext'=>'选择收款人 ', 'items'=>$user,'url'=>web_url('member/query') ))}
+    </div>
+</div>
+{/if}
+<div class="form-group-title">客服通知</div>
+<div class="form-group">
+    <label class="col-lg control-label">客服二维码</label>
+    <div class="col-sm-8 col-xs-12">
+        {php echo tpl_form_field_image('merchant[kefuimg]', $item['kefuimg']);}
+        <span class="help-block">图片建议为640*870</span>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">通知管理员</label>
+    <div class="col-sm-8 col-xs-12">
+    	<?php echo tpl_selector('openids',
+        array('multi'=>1,
+        'value'=>($id>0?null:'可指定多个管理员'),
+        'key'=>'openid',
+        'text'=>'nickname',
+        'thumb'=>'avatar',        
+        'placeholder'=>'昵称/姓名/手机号',
+        'buttontext'=>'选择管理员 ',
+        'items'=>$members,
+        'url'=>web_url('member/query')))?>
+    </div>
+</div>
+
+{if !empty($id)}
+<div class="form-group">
+    <label class="col-lg control-label">添加日期</label>
+    <div class="col-sm-8 col-xs-12 form-control-static">
+        {php echo date('Y-m-d', $item['createtime']);}
+    </div>
+</div>
+{/if}

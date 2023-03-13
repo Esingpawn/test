@@ -1,0 +1,86 @@
+{php fx_load()->app('common');}
+{php $routes = explode('.', $_W['routes'])}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{if !empty($pagetitle)}{$pagetitle}{elseif !empty($_W['page']['title'])}{$_W['page']['title']}{/if}</title>
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="shortcut icon" href="{FX_URL}icon.jpg" />
+    <link rel="stylesheet" type="text/css" href="../app/resource/css/common.min.css?v={IMS_RELEASE_DATE}">
+    <link rel="stylesheet" type="text/css" href="{FX_BASE}app/resource/components/mui/mui.ext.css?v={FX_RELEASE_DATE}">
+    <link rel="stylesheet" type="text/css" href="{FX_BASE}app/resource/components/dropload/dropload.css?v=20171106">
+    {php echo wx_jssdk(false);}
+    <!--兼容图片上传1.0-->
+    <script>var app_module_name='{IN_MODULE}';</script>
+    <script type="text/javascript" src="../app/resource/js/app/util.js?v={FX_RELEASE_DATE}"></script>
+    <script type="text/javascript" src="../app/resource/js/require.js?v={FX_RELEASE_DATE}"></script>
+    <script type="text/javascript" src="../app/resource/js/lib/jquery-1.11.1.min.js?v={IMS_RELEASE_DATE}"></script>
+    <script type="text/javascript" src="{FX_BASE}app/resource/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="{FX_BASE}app/resource/js/app/util.min.js?v={FX_RELEASE_DATE}"></script>
+    <script type="text/javascript" src="{FX_BASE}app/resource/components/mui/js/mui.min.js?v={FX_RELEASE_DATE}"></script>
+    <script type="text/javascript" src="../app/resource/js/app/common.js?v={IMS_RELEASE_DATE}"></script>
+    <script type="text/javascript" src="{FX_BASE}app/resource/components/dropload/dropload.min.js?v=1.0.1"></script>
+    <script type="text/javascript" src="{FX_BASE}app/resource/components/layui/laytpl.js"></script>
+    <script type="text/javascript" src="{FX_BASE}app/resource/components/headroom/jQuery.headroom.js?v=20171114"></script>
+    <script type="text/javascript">
+		var htmlFont = $("html").css("font-size").replace('px',''),
+		shareData = {
+			title : "{$_W['share']['title']}",
+			desc  : "{$_W['share']['desc']}",
+			link  : location.href.split('from')[0] + "&mid={$_W['fans']['uid']}",
+			imgUrl: "{php echo tomedia($_W['share']['pic'])}"
+		}, 
+		wxapp_data = {
+			'url': '/wnfx_activity/pages/index/index',
+			'shareDesc': shareData.desc,
+			'shareImage': shareData.imgUrl,
+			'shareTitle': shareData.title,
+			'id': "{$_GPC['id']}",
+			'mid': "{$_W['fans']['uid']}"
+		},
+		position = {lat:0,lng:0,addr:'',city:'',ucity:"{php echo intval($_W['_config']['countrie'])==1 || !intval($_W['_config']['countrie']) ? '全国' : ''}"};
+		position = $.getCookie("position")==null ? position : JSON.parse($.getCookie("position"));
+{if intval($_W['_config']['location']) && ($routes[0]=='home' || $routes[0]=='activity')}
+		if ($.getCookie("position")==null){
+			util.location(function(res) {
+				res.ucity = position.ucity!='' ? position.ucity : res.city.replace("市", "");
+				$.setCookie("position", JSON.stringify(res), 's3600');
+				window.location.reload()
+			});
+		}
+{/if}
+		wx.ready(function () {
+			var _sharedata = {
+				title  : shareData.title,
+				desc   : shareData.desc,
+				link   : shareData.link,
+				imgUrl : shareData.imgUrl,
+				success: function(share){
+				{if $_W['action']=='activity.detail'}
+					$.post("{php echo app_url('activity/detail/share',array('id'=>$id))}",function(d) {
+						if (d.result==1 || d.result==2){
+							util.alert(d.data,' ',function(){ });							
+						}
+						{if $_W['plugin']['poster']['config']['commission_enable'] && $activity['prize']['commission'] && empty($agent)}	util.confirm('分享好友{$_W['_config']['buytitle']}获取 {$commission_rule["first_level_rate"]}% 佣金，点击我要推广，升级为推广员', ' ', ['取消', '我要推广'], function(e) {
+								if (e.index == 1) location.href = "{$commission_url}"
+							});								
+						{/if}
+					},"json");		
+				{/if}},
+				cancel : function(){util.alert('已取消分享', ' ')}
+			};
+			{php echo $_W['container']=='workwechat' ? 'wx.onMenuShareWechat(_sharedata);' : '';}
+			wx.onMenuShareAppMessage(_sharedata);
+			wx.onMenuShareTimeline(_sharedata);
+			wx.onMenuShareQQ(_sharedata);
+		});
+	</script>
+</head>
+<body>
+{fx_template 'common/loader'}

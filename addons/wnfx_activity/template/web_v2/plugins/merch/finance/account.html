@@ -1,0 +1,181 @@
+{fx_template 'common/header'}
+<style type='text/css'>
+    .table-header{
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        -webkit-justify-content: center;
+        -webkit-align-content: space-around;
+        align-content: space-around;
+    }
+    .table-header .others{
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+		display: flex;
+		flex-direction: column;
+		text-align:center;
+		align-items: center;
+    	-webkit-justify-content: center;
+    }
+	.table-header .others.text-left{text-align:left;}
+</style>
+<div class="page-header">
+    当前位置：<span class="text-primary">结算中心</span>
+</div>
+<div class="page-content">
+    <div class="table-responsive" style="margin-bottom:30px">
+        <div class="table-header" style="background:#f8f8f8;">
+            <div style="width:48px;text-align:left;"><image src="{php echo tomedia($item['logo']);}" style="max-width: 48px; max-height: 48px; border: 1px dotted gray"></div>
+            <div class="others text-left">{$item['name']}</div>
+            <div class="others">总成交额：{if $item['amount']}{$item['amount']}元{else}0.00元{/if}</div>
+            <div class="others">可结算金额：{if $item['no_money']}{$item['no_money']}元{else}0.00元{/if}</div>
+            <div class="others">线下付款：{if $item['delivery']}{php echo currency_format($item['delivery'])}元{else}0.00元{/if}</div>
+            <div class="others">上缴佣金：{php echo currency_format($item['no_money']*$item['percent']*0.01);}元</div>
+            <div class="others">佣金比：{if !empty($item['percent'])}{$item['percent']}%{else}0.00%{/if}</div>
+        </div>
+    </div> 
+    <div class="tabs-container">
+        {if !MERCHANTID}
+        <ul class="nav nav-tabs" id="myTab" style="margin-bottom:30px">
+            <li {if $_W['op'] =='account' && $_GPC['accountType']=='weixin'}class="active"{/if}><a href="#tab_weixin">结算到微信</a></li>
+            <li {if $_W['op'] =='account' && $_GPC['accountType']=='f2f' }class="active"{/if}><a href="#tab_f2f">面对面结算</a></li>
+        </ul>
+        {/if}
+        <div class="tab-content">
+            <div class="tab-pane{if strpos('tab_weixin', $tab) !== false} active{/if}" id="tab_weixin">
+                <div class="alert alert-primary">
+                    <p>
+                    1.<font color="red" size="3">总交易</font>金额：用户支付过的金额总和。<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<1>以下情况会<font color="red" size="3">增加</font>总交易金额：<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①.用户成功支付金额、后台转支付状态；<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<2>以下情况会<font color="red" size="3">减少</font>总交易金额：<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①.退款后、取消支付；<br>
+                    
+                    </p>
+                    <p>
+                    2.<font color="red" size="3">可结算</font>金额：可以结算给商户的实际金额。<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<1>以下情况会将订单实际支付金额<font color="red" size="3">增加</font>到可结算金额【线下付款、后台转支付状态除外】：<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①.核销后：后台报名设置核销，微信端扫码核销，微信端验证码核销；<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<2>以下情况会<font color="red" size="3">减少</font>可结算金额：<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①.用户结算后；<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;②.已核销用户退款；
+                    </p>
+                    {if !MERCHANTID}
+                    <p>
+                    3.结算金额必须大于1元。
+                    </p>
+                    <p>
+                    4.请确认微信商户后台有足够的<font color="red" size="3">可用余额</font>。
+                    </p>
+                    <p>
+                    5.结算金额直接提现到该主办方<font color="red" size="3">提现微信号</font>的<font color="red" size="3">微信钱包</font>中，<font color="red" size="3">注意绑定正确的微信号</font>，必要时可结算1元到该微信号上<font color="red" size="3">验证</font>是否绑定正确。
+                    </p>
+                     <p>
+                    6.佣金举例：佣金百分比为10%，需要给主办方结算100元，则主办方实际到账90元，佣金为10元。
+                    </p>
+                    <p> 接口调用规则：<br>
+                        ◆ 给同一个实名用户付款，单笔单日限额2W/2W<br>
+                        
+                        ◆ 给同一个非实名用户付款，单笔单日限额2000/2000<br>
+                        
+                        ◆ 一个商户同一日付款总额限额100W<br>
+                        
+                        ◆ 单笔最小金额默认为1元<br>
+                        
+                        ◆ 每个用户每天最多可付款10次，可以在商户平台--API安全进行设置<br>
+                        
+                        ◆ 给同一个用户付款时间间隔不得低于15秒
+                    </p>
+                    {/if}
+                </div>
+                <form class="form-horizontal form-validate" action="" method="post" enctype="multipart/form-data">
+                    <div class="form-group-title">{php echo MERCHANTID?'提现':'结算'}</div>
+                    <div class="form-group">
+                        <label class="col-lg control-label">总交易金额</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="form-control-static">{if $account['amount']}{$account['amount']}元{else}0.00元{/if}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg control-label">目前可结算金额</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="form-control-static">{if $item['no_money']}{$item['no_money']}元{else}0.00元{/if}【其中{if $item['no_money_doing']}{$item['no_money_doing']}元{else}0.00元{/if}为正在申请中的金额】</div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label class="col-lg control-label">佣金百分比</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="form-control-static">{if $item['percent']}{$item['percent']}%{else}0.00%{/if}【到账金额 = 输入结算金额 - 输入结算金额 * 佣金百分比 ；】</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg control-label">输入结算金额</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input class="form-control" name="money" type="text" value="{$_GPC['money']}" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg control-label"></label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="hidden" name="id" value="{$id}">
+                            <input type="hidden" name="accountType" value="weixin">
+                            <input type="hidden" name="token" value="{$_W['token']}">
+                            <input type="submit" value="{if MERCHANTID}申请{else}结 算{/if}" class="btn btn-primary span2">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane{if strpos('tab_f2f', $tab) !== false} active{/if}" id="tab_f2f">
+                <form class="form-horizontal form-validate" action="" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="col-lg control-label">总交易金额</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="form-control-static">{if $account['amount']}{$account['amount']}元{else}0.00元{/if}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg control-label">目前可结算金额</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="form-control-static">{if $account['no_money']}{$account['no_money']}元{else}0.00元{/if}【其中{if $account['no_money_doing']}{$account['no_money_doing']}元{else}0.00元{/if}为正在申请中的金额】</div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:none">
+                        <label class="col-lg control-label">佣金百分比</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <div class="form-control-static">{if $item['percent']}{$item['percent']}%{else}0.00%{/if}【到账金额 = 输入结算金额 - 输入结算金额 * 佣金百分比 ；】</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg control-label">输入结算金额</label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input class="form-control" name="money" type="text" value="{$_GPC['money']}" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg control-label"></label>
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="hidden" name="id" value="{$id}">
+                            <input type="hidden" name="accountType" value="f2f">
+                            <input type="hidden" name="token" value="{$_W['token']}">
+                            <input type="submit" value="{if MERCHANTID}申请{else}结 算{/if}" class="btn btn-primary span2">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	require(['bootstrap'], function () {
+		$('#myTab a').click(function (e) {
+			$('#tab').val( $(this).attr('href'));
+			e.preventDefault();
+			$(this).tab('show');
+		})
+	});
+</script>
+{fx_template 'common/footer'}

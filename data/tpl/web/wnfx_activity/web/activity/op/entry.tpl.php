@@ -1,0 +1,38 @@
+<?php defined('IN_IA') or exit('Access Denied');?><style>
+label.error{font-weight:normal;margin:0;padding:0;color:#F00;line-height:0;font-size:0;display:none!important;}
+</style>
+<form id="form-msg" class="form-horizontal form-ajax" action="" method="post" enctype="multipart/form-data">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">入口链接</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                	<label class="col-sm-2 control-label">公众号</label>
+                    <div class="col-sm-10">
+                    	<span class="form-control-static" style="display:block">
+                        	<a href="javascript:;" class="js-clip" title="点击复制链接" data-url="<?php  echo app_url('activity/detail',array('id'=>$_GPC['id']))?>"><?php  echo app_url('activity/detail',array('id'=>$_GPC['id']))?></a>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                	<label class="col-sm-2 control-label">小程序</label>
+                    <div class="col-sm-10">
+                    	<span class="form-control-static" style="display:block">
+                    		<a href="javascript:;" class="js-clip" title="点击复制链接" data-url="<?php echo IN_MODULE;?>/pages/goods/detail?id=<?php  echo $_GPC['id'];?>"><?php echo IN_MODULE;?>/pages/goods/detail?id=<?php  echo $_GPC['id'];?></a>                            
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+
+</script>
+<!--蜗牛科技-->

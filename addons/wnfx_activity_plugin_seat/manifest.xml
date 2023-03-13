@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns="http://www.we7.cc" versionCode="0.8,1.0">
+
+	<application setting="true">
+		<name><![CDATA[选座工具01]]></name>
+		<identifie><![CDATA[wnfx_activity_plugin_seat]]></identifie>
+		<version><![CDATA[1.0.0]]></version>
+		<type><![CDATA[services]]></type>
+		<ability><![CDATA[订票选座]]></ability>
+		<description><![CDATA[选座插件]]></description>
+		<author><![CDATA[微擎]]></author>
+		<url><![CDATA[http://www.we7.cc/]]></url>
+	</application>
+
+	<platform>
+		<subscribes>
+		</subscribes>
+
+		<handles>
+		</handles>
+
+		<rule embed="false" /> 
+		<card embed="false" />
+		<oauth type="1" />
+		
+		<supports>
+			<item type="wxapp" />
+			<item type="app" />
+		</supports>
+		<plugin-main name="wnfx_activity" />
+	</platform>
+
+	<bindings>
+	</bindings>
+
+	<permissions>
+	</permissions>
+
+	<install><![CDATA[
+CREATE TABLE IF NOT EXISTS `ims_fx_seat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL COMMENT '场地名称',
+  `rows` int(11) NOT NULL COMMENT '行数',
+  `columns` int(11) NOT NULL COMMENT '列数',
+  `unavailable` text NOT NULL COMMENT '已售出',
+  `noavailable` text NOT NULL COMMENT '不可选',
+  `gid` varchar(500) NOT NULL,
+  `storeid` varchar(500) NOT NULL,
+  `merchid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+]]></install>
+	<uninstall><![CDATA[DROP TABLE IF EXISTS `ims_fx_seat`;
+]]></uninstall>
+	<upgrade><![CDATA[ru_rpgrade.php]]></upgrade>
+
+</manifest>

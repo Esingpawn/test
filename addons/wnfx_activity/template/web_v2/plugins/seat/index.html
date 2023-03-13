@@ -1,0 +1,93 @@
+{fx_template 'common/header'}
+<div class="page-header">
+    当前位置：<span class="text-primary">座位管理</span>
+</div>
+<div class="page-content">
+	<form action="" method="get" class="form-horizontal form-search" role="form">
+        <input type="hidden" name="c" value="site">
+        <input type="hidden" name="a" value="entry">
+        <input type="hidden" name="m" value="{IN_MODULE}">
+        <input type="hidden" name="do" value="web">
+        <input type="hidden" name="r" value="seat">
+        <div class="page-toolbar">
+            <div class="pull-left">
+                <a class="btn btn-primary btn-sm" href="{php echo web_url('seat/edit')}"><i class="fa fa-plus"></i> 添加座位</a>
+            </div>
+            <div class="pull-right col-sm-6">
+                <div class="input-group">                    
+                    <input type="text" class="form-control" name="keyword" value="{$_GPC['keyword']}" placeholder="输入场地名称">
+                    <span class="input-group-btn"><button class="btn btn-primary" type="submit">搜索</button></span>
+                </div>
+            </div>
+        </div>
+    </form>
+    {if count($list)>0}
+	<form action="" method="post">    	
+		<div class="page-table-header">
+            <input type="checkbox">
+            <div class="btn-group">
+                {if perm('seat.delete')}
+                <button class="btn btn-default btn-sm btn-operation" type="button" data-toggle='batch-remove' data-confirm="确认要删除?" data-href="{php echo web_url('seat/delete')}">
+                    <i class='icow icow-shanchu1'></i> 删除
+                </button>
+                {/if}
+            </div>
+        </div>
+		<table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th style="width:25px;"></th>
+                    {if !MERCHANTID}<th style="width:160px;">所属商户</th>{/if}
+                    <th style="">场地名称</th>
+                    <th style="">规格</th>
+                    <th style="width: 125px;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {loop $list $row}
+                <tr>                    
+                    <td><input type='checkbox'   value="{$row['id']}"/></td>
+                    {if !MERCHANTID}<td>{if $row['merchname']}{$row['merchname']}{else}<span class="label label-success">官方平台</span>{/if}</td>{/if}
+                    <td>{$row['name']}</td>                    
+                    <td><span><span style="color: #5097d3">{$row['rows']}</span> 排</span> × <span><span class="text-warning">{$row['columns']}</span> 列</span></td>
+                    <td>
+                        <a class='btn btn-default btn-sm btn-op btn-operation' href="{php echo web_url('seat/edit', array('id' => $row['id']))}">
+                            <span data-toggle="tooltip" data-placement="top" title="" data-original-title="编辑">
+                            	<i class="icow icow-bianji2"></i>
+                            </span>
+                        </a>
+                        {if perm('seat.delete')}
+                        <a class='btn btn-default  btn-sm btn-op btn-operation' data-toggle="ajaxRemove"  href="{php echo web_url('seat/delete', array('id' => $row['id']))}" data-confirm="确认删除此门店吗？">
+                        	<span data-toggle="tooltip" data-placement="top" title="" data-original-title="删除">
+                            	<i class='icow icow-shanchu1'></i>
+                        	</span>
+                        </a>
+                        {/if}
+                    </td>
+                </tr>
+                {/loop}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td colspan="{if MERCHANTID}1{else}2{/if}">
+                        <div class="btn-group">
+                            {if perm('seat.delete')}
+                            <button class="btn btn-default btn-sm btn-operation" type="button" data-toggle='batch-remove' data-confirm="确认要删除?" data-href="{php echo web_url('seat/delete')}">
+                                <i class='icow icow-shanchu1'></i> 删除
+                            </button>
+                            {/if}
+                        </div>
+                    </td>
+                    <td colspan="2" class="text-right"> {$pager}</td>
+                </tr>
+            </tfoot>
+        </table>
+	</form>
+    {else}
+    <div class="panel panel-default">
+        <div class="panel-body empty-data">暂时没有任何信息!</div>
+    </div>
+    {/if}
+</div>
+{fx_template 'common/footer'}

@@ -1,0 +1,105 @@
+<style>
+label.error{font-weight:normal;margin:0;padding:0;color:#F00;line-height:0;font-size:0;display:none!important;}
+</style>
+<form id="form-msg" class="form-horizontal form-ajax" action="" method="post" enctype="multipart/form-data" >
+	<input type='hidden' name='id' value='{$id}' />
+    <input type='hidden' name='ids' value='{$rids}' />
+	<div class="modal-dialog">
+		<div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">通知</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-5">
+                        <label class="radio-inline">
+                            <input type="radio" name="messge_type" value="1" checked> 模板通知
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="messge_type" value="2"> 短信通知
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-{if !empty($rids)}12{else}6{/if}">
+                    <select class="form-control" name="status">
+                        <option value="">请选择活动状态</option>
+                        <option value="1">活动发布</option>
+                        <option value="2">活动开始</option>
+                        <option value="3">活动结束</option>
+                    </select>
+                    </div>
+                    <div class="{if empty($rids)}col-sm-6{/if}"{if !empty($rids)} style=" width:0;overflow:hidden"{/if}>
+                    <select class="form-control" name="fans_group"{if !empty($rids)} style="border:none"{/if}>
+                        <option value="">请选择粉丝组</option>
+                        <option value="1">公众号粉丝</option>
+                        <option value="2">主办方粉丝</option>
+                        <option value="3">已核销用户</option>
+                        <option value="4">未核销用户</option>
+                        <option value="5"{if !empty($rids)} selected{/if}>所有报名用户</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                    <input type="text" name="messge_title" class="form-control" value="" placeholder="标题内容，不填写默认活动名称"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                    <input type="text" name="messge_url" class="form-control" value="" placeholder="跳转连接，不填写系统默认【短信不支持】"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                    <textarea name="messge_remark" rows="3" class="form-control valid" placeholder="备注内容，不填写系统默认"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" onclick="return mc_check(this)">提交</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+var validform;
+myrequire(['jquery.form', 'jquery.validate'], function() {
+	validform = function() { 
+		return $("#form-msg").validate({
+			rules: {
+			  status: "required",
+			  fans_group: {
+				required: true,
+				minlength:1
+			  }
+			},
+			messages: {
+			  status: "活动状态为必选项！",
+			  fans_group: {
+				required: "粉丝组为必选项！",
+				minlength: "最少要选中1项"
+			  }
+			}
+		});
+	}
+});
+function mc_check(obj){
+	if (validform().form()) {
+		biz.ProgressBar(obj, function(r){
+			tip.alert('已发送完毕！');
+		}, ["{php echo web_url('activity/op/sendmsg')}"]);
+	}else{
+		$('#form-msg label.error').each(function() {
+			if ($(this).text()!=''){
+				tip.msgbox.err($(this).text());
+				return false;
+			}
+		});
+	}
+	return false;
+}
+</script>
+<!--蜗牛科技-->

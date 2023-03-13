@@ -1,0 +1,120 @@
+<?php defined('IN_IA') or exit('Access Denied');?><style type="text/css">
+.mui-popover .mui-popover-content{height:94.5%;}
+.mui-setting-content .mui-popover .mui-table-view-cell.avatar{line-height:40px;}
+.mui-setting-content .mui-popover .mui-table-view-cell.avatar .upload-btn{position: absolute;top: 0;height: 100%;width: 100%;left: 0;}
+.mui-setting-content .mui-popover .mui-table-view-cell.avatar .upload-btn div{ width:100%!important; height:100%!important;}
+.mui-setting-content .mui-popover .mui-table-view-cell.avatar .head-img{margin-right: 20px;border-radius:10%;vertical-align: middle;}
+.mui-popup-backdrop{ z-index:9999;}
+#merch_detail textarea{border:none; padding:5px 10px;border-radius:10px;}
+.mui-poppicker{ z-index:9999;}
+.mui-poppicker~.mui-backdrop{z-index:9998;}
+.webuploader-container{position: relative;}
+.webuploader-pick {position: relative;display: inline-block;cursor: pointer;padding: 1px 5px;color: #fff;text-align: center;border-radius: 3px;overflow: hidden}
+.mui-popover-left .mui-table-view .mui-table-view-cell{border-radius:0!important;}
+</style>
+<div class="mui-setting-content">
+<?php  if($_W['action'] == "member") { ?>
+	<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('member/setting_home', TEMPLATE_INCLUDEPATH)) : (include fx_template('member/setting_home', TEMPLATE_INCLUDEPATH));?>
+<?php  } else if($_W['action'] == "member.merch") { ?>
+	<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('member/setting_merch', TEMPLATE_INCLUDEPATH)) : (include fx_template('member/setting_merch', TEMPLATE_INCLUDEPATH));?>
+<?php  } else if($_W['action'] == "member.project") { ?>
+	<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('member/setting_project', TEMPLATE_INCLUDEPATH)) : (include fx_template('member/setting_project', TEMPLATE_INCLUDEPATH));?>
+<?php  } else if($_W['action'] == "order.detail") { ?>
+	<?php (!empty($this) && $this instanceof WeModuleSite || 0) ? (include fx_template('member/setting_order', TEMPLATE_INCLUDEPATH)) : (include fx_template('member/setting_order', TEMPLATE_INCLUDEPATH));?>
+<?php  } ?>
+</div>
+<script>
+mui('.mui-scroll-wrapper').scroll({indicators: false});
+$('body').delegate('.js-popover', 'tap', function(e) {
+	var popover = "#"+$(this).attr("data-popover");
+	mui(popover).popover('toggle');
+	if (popover=='#act_setting' || popover=='#act_spec'){
+		setTimeout(function(){$(popover).css('transition','none')}, 290);
+	}
+});
+$(".js-popover-close").on("click",function(e) {
+	var popover = "#"+$(this).attr('data-popover');
+	if (popover=='#act_setting' || popover=='#act_spec'){
+		$(popover).css('transition','');
+	}
+	mui(popover).popover('toggle');
+});
+$(".js-popover-sub").on('tap',function(e) {
+	var popover = "#"+$(this).attr('data-popover');
+	$(popover).css('display','block')[0].offsetWidth;
+	$(popover).addClass('mui-active');
+	if ($(this).parents('.mui-popover-sub').length) {
+		//$(this).parents('.mui-popover-sub').hide().removeClass('mui-active');
+		//$('body').find('.mui-backdrop-sub').remove();history.back(-1);
+	}
+	$('body').append('<div class="mui-backdrop mui-active mui-backdrop-sub"></div>');
+	if (popover == '#mui_search') {
+		var t = '<?php  echo $keyword;?>';
+		if (util.ios()){
+			$("input[name='keyword']").focus().val(t);
+		}else{
+
+			setTimeout(function(){$("input[name='keyword']").focus().val(t);}, 520);
+		}
+	}
+});
+$('.js-popover-sub-close').on('click',function(e) {
+	var popover = "#"+$(this).attr('data-popover');
+	$(popover).removeClass('mui-active').fadeOut();
+	$('body').find('.mui-backdrop-sub').remove();history.back(-1);
+});
+$('body').delegate('.mui-backdrop-sub','tap', function(e) {
+	$(this).remove();
+	$('.mui-popover-sub').removeClass('mui-active').fadeOut();
+});
+
+<?php  if($_W['action'] == "member.project" || $_W['op'] == "hexiao") { ?>
+//地图控制
+$('body').delegate('.js-map-select','click', function(e){
+	var address = $('.map-container').find("iframe").contents().find("#addr_cur").val();
+	var adinfo = $('.map-container').find("iframe").contents().find("#ad_info").val();
+	if (address=='' || address==null){
+		<?php  if($_W['op'] == "hexiao") { ?>
+		util.tips('坐标不能为空');
+		<?php  } else { ?>
+		util.confirm('您确定不设置场地吗？', ' ', function(e) {
+			if (e.index == 0) {
+				return false;
+			}else{
+				$('.js-address').find("span").text('线上活动');
+				$("input[name='activity[hasonline]']").val(1);
+				$('.js-addname').hide();
+				$('.map-container').removeClass('map-active');
+				history.back(-1);
+			}
+		});
+		<?php  } ?>
+	}else{
+		var point = JSON.parse($('.map-container').find("iframe").contents().find("#poi_json").val());
+		console.log(point);
+		$('.js-address').find("span").text(address);
+		$('.js-address').find("input").eq(0).val(address).next().val(point.lat).next().val(point.lng).next().val(adinfo);
+		$("input[name='activity[hasonline]']").val(0);
+		$('.js-addname').show();
+		$('.map-container').removeClass('map-active');
+		history.back(-1);
+	}
+});
+$('.js-map').on('tap',function(e){
+	mui('#map_selector').popover('toggle');
+	var type = $(this).data("type");	
+	if (type=='map'){
+		if (!$('div').hasClass('map-container')){
+			$('body').append('<div class="map-container"><iframe class="embed-responsive-item" src="'+"<?php  echo app_url('map/tencent')?>"+'" scrolling="no"></iframe><footer class="mui-bar mui-bar-footer"><botton type="botton" class="mui-btn mui-btn-primary mui-btn-block js-map-select">确认当前位置</botton></footer></div>');
+		}
+		$('.map-container').addClass('map-active');
+	}else{
+		history.back(-1);
+		$('.js-address').find("span.mui-badge").text('线上活动');
+		$("input[name='activity[hasonline]']").val(1);
+		$('.js-addname').hide();
+	}
+});
+//地图控制结束
+<?php  } ?>
+</script>

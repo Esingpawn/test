@@ -1,0 +1,207 @@
+<style>
+.phase-txt{line-height:1;padding: 15px 0 12px 0}
+.phase-txt:first-child{padding-top:0}
+.phase-box{border: 1px solid #e7ecf2;width: 100%;padding:15px 25px}
+.phase-box .control-label{ text-align:left}
+.tables{border:1px solid #e5e5e5;line-height: 18px;overflow:hidden}
+.tables:hover{border:1px solid #b1d8f5}
+.table-row{border-bottom:1px solid #efefef;}
+.table-row:last-child{border: none;}
+.table-row,.table-header,.table-footer,.table-top{display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;justify-content: center;-webkit-justify-content: center;-webkit-align-content: space-around;align-content: space-around}
+.tables .table-row>div{text-align:center;padding: 14px 10px}
+.tables .table-row>div>input{text-align:center}
+.tables .table-row.table-top>div{margin: 0 !important;padding: 16px 0}
+.tables .table-row .ops.list-inner{border-right:none}
+.tables .list-inner{border-right: 1px solid #efefef;vertical-align: middle}
+.tables .list-inner .btn~.btn{margin-top:3px}
+.table-row .goods-des .title{overflow: hidden;text-overflow: ellipsis}
+.table-row .goods-des{width:260px;border-right: 1px solid #efefef;vertical-align: middle}
+.table-row .goods-des.singleRefund{padding: 0px !important;display: flex;flex-direction: column;margin: 0 !important}
+.table-row .goods-des.singleRefund{padding: 16px 0}
+.table-row .goods-des.singleRefund .goodsRefund{border-bottom: 1px solid #efefef;flex-direction: initial;margin: 0 !important}
+.table-row .list-inner{-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;text-align: center;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;-webkit-align-items: center;align-items: center;-webkit-justify-content: center;justify-content: center;-webkit-flex-direction: column;flex-direction: column}
+.table-header .others{-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1;text-align:center}
+.table-header .others.text-left{text-align:left;}
+.table-footer>div, .table-top>div{-webkit-box-flex: 1;-webkit-flex: 1;-ms-flex: 1;flex: 1}
+.tables .table-row.table-top>.tables{padding:0;border:none;padding:0;border-top: 1px solid #e5e5e5}
+.tables .table-row.table-top>.tables:hover{border-top: 1px solid #e5e5e5;}
+.error {color: #eb6060!important}
+.checkbox-inner{ display:none}
+.checkbox-inner .checkbox-group .checkbox-inline{width: 58px;}
+.checkbox-group~.error{ margin-top:10px}
+.wi-info{position:relative}
+.wi-info:hover .tooltip{opacity:.9;display:block}
+.wi-info .tooltip{left:50%;transform: translateX(-50%)}
+.wi-info .tooltip .tooltip-inner{min-width:200px}
+</style>
+<form id="formPhase" class="form-horizontal form-validate" action="" method="post" enctype="multipart/form-data">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title" data-toggle="tooltip" data-placement="bottom" data-original-title="删除票种">举办多次设置</h4>
+            </div>
+            <div class="modal-body" style='max-height:500px;overflow:auto;min-width:850px;'>
+            	<div class="phase-txt"><span class="txt-title">活动场次</span></div>
+            	<div class="phase-box">
+                    <div class="form-group">
+                        <label class="col-lg-1 control-label">举办频次</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" name="phasetype">
+                                <option value="1">每天</option>
+                                <option value="2">每周</option>
+                                <option value="3">每月</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group checkbox-inner">
+                    	<div class="checkbox-group"></div>
+                    </div>                    
+                    <div class="form-group">
+                        <label class="col-lg-1 control-label">举办时间</label>
+                        <div class="col-sm-3">
+                            {php echo tpl_form_field_clock('clock1', $item['clock1']);}
+                        </div>
+                        <div class="col-sm-1" style="text-align:center;line-height:25px">——</div>
+                        <div class="col-sm-3">
+                            {php echo tpl_form_field_clock('clock2', $item['clock2']);}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-1 control-label">举办日期</label>
+                        <div class="col-sm-3">
+                           {php echo tpl_form_field_date('starttime', $item['starttime'], false);}
+                        </div>
+                        <div class="col-sm-1" style="text-align:center;line-height:25px">——</div>
+                        <div class="col-sm-3">
+                           {php echo tpl_form_field_date('endtime', $item['endtime'], false);}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="help-block">
+                        场次描述：2021-12-08至2022-02-02　
+                        <span>每周：<span>周五</span>,<span>周六</span></span> 09:00-12:00
+                        </span>
+                    </div>
+                </div>
+                <div class="phase-txt"><span class="txt-title">批量设置费用</span></div>
+                <div class="table-responsive">           	
+                    <div class="tables">
+                        <div class="table-row table-top" style="display:block">
+                            <div class="table-header" style="background:#f7f7f7">
+                                <div style="border-left:1px solid #f2f2f2;width:260px;text-align:center;">票种名称</div>
+                                <div class="others">票价（元）</div>
+                                <div class="others">尊享会员价(元)<i class="wi wi-info text-danger">
+                                    <div class="tooltip bottom" role="tooltip">
+                                        <div class="tooltip-arrow"></div>
+                                        <div class="tooltip-inner">
+                                            <p><span class="text-danger">只有支持年卡才生效。</span></p>                                            
+                                        </div>
+                                    </div>
+                                </i></div>
+                                <div class="others">数量</div>
+                                <div class="others">操作</div>
+                            </div>
+                            <div class="tables spec_items">
+                                <div class="table-row spec_item">
+                                    <div class="goods-des">
+                                        <input type="text" name="spec_item_title[]" class="form-control" value="" placeholder="票种1" data-rule-required="true">
+                                    </div>                        
+                                    <div class="list-inner columnFlex">
+                                        <input type="text" name="option_marketprice[]" class="form-control" value="0" data-rule-required="true">
+                                    </div>
+                                    <div class="list-inner columnFlex">
+                                        <input type="text" name="option_costprice[]" class="form-control" value="" placeholder="不填则无会员价">
+                                    </div>
+                                    <div class="list-inner columnFlex">
+                                        <input type="text" name="option_stock[]" class="form-control" value="" placeholder="不填则无限制">
+                                    </div>
+                                    <div class="list-inner columnFlex ops">
+                                        <a class="op text disabled" onclick="delSpecItem(this)"><i class="icow icow-shanchu1"></i></a>
+                                    </div>
+                                </div>
+                                <div class="table-footer" style="padding:20px;">
+                                    <div style="margin-left:1px;flex:unset;">
+                                        <button class="btn btn-default btn-primary-o" type="button" onclick='addSpecItem1(this)'><i class="fa fa-plus"></i> 添加票种</button>  
+                                    </div>                            
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+            	</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" onclick="return phase_check(this)">提交</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+$("select[name='phasetype']").change(function(){
+	var tpl = '';
+	$(this).val()==1 && $('.checkbox-inner').hide();
+	$(this).val()==2 && $(function(){
+		tpl = '<label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="周一"> 周一</label> <label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="周二"> 周二</label> <label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="周三"> 周三</label> <label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="周四"> 周四</label> <label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="周五"> 周五</label> <label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="周六"> 周六</label> <label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="周日"> 周日</label>';
+		$('.checkbox-inner').show();
+	});
+	$(this).val()==3 && $(function(){
+		for(var i = 0; i < 31; i++){
+			tpl += '<label class="checkbox-inline"><input type="checkbox" name="checkbox[]" value="'+(i+1)+'号"> '+(i+1)+'号</label>';
+		}
+		$('.checkbox-inner').show();
+	});	
+	tpl != '' && $('.checkbox-group').html(tpl);
+});
+
+var validform = $("#formPhase").validate({
+	rules: {			  
+	  'checkbox[]': {
+		required: true,
+		minlength:1
+	  },
+	},
+	messages: {			  
+	  'checkbox[]': {
+		required: "请选择活动周期时间是哪一天",
+		minlength: "最少要选中1项"
+	  },
+	  'spec_item_title[]': "票种名称不能为空",
+	  'option_marketprice[]': "请输入金额，免费请填0",
+	},
+	errorPlacement: function (error, element){
+		if (element[0].name=='checkbox[]')
+			$('.checkbox-group').after(error);
+		else
+			$(element).after(error);
+		return
+	}
+});
+
+function phase_check(obj){
+	if (validform.form()) {
+		$('#ajaxModal').modal("hide"),
+		$('#timeBox').hide(), 
+		$('#phaseBox').show();
+		
+		$('#option_inner').hide();
+		$('#hasoption').attr({checked: false, "disabled": "true"});
+		$('#tboption').hide();
+		$('#specs').html('');
+		$("#options").html('');
+		$('#gnum').val('');
+		$.post("{php echo web_url('activity/tpl/phase')}", $('#formPhase').serialize(), function(data){
+			$('#phaseBox').next().find('.btn').eq(0).hide(),$('#phaseBox').next().find('.btn').eq(1).show();
+			$('#phaseBox').html(data);
+		},"html");
+	}else{
+		$('#formPhase .error').each(function() {
+			if ($(this).text()!=''){
+				tip.msgbox.err($(this).text());
+				return false;
+			}
+		});
+	}
+	return false;
+}
+</script>

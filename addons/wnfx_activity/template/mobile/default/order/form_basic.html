@@ -1,0 +1,44 @@
+{if $ii==0}
+    {if $sysform['realname']['show']!='0'}
+    <div class="mui-input-row">
+        <label>{$sysform['realname']['title']}</label>
+        <input type="text" name="member_{$ii}[realname]" placeholder="{$sysform['realname']['title']} (必填)" value="{$profile['realname']}">
+    </div>
+    {/if}
+    {if $sysform['mobile']['show']!='0'}
+    <div class="mui-input-row mui-help">
+        <label>{$sysform['mobile']['title']}</label>
+        <input type="number" name="member_{$ii}[mobile]" class="mobile" placeholder="{$sysform['mobile']['title']} (必填)" pattern="[0-9]*" value="{$profile['mobile']}"{if !empty($profile['mobile']) && $_W['_config']['smsswitch']} onfocus="this.blur()"{/if}/>
+        {if !empty($profile['mobile']) && $_W['_config']['smsswitch']}
+        <div class="mui-help-info mui-navigate-right mui-text-right js-check-mobile"><span class="mui-badge mui-badge-inverted">点此变更</span></div>
+        {/if}
+    </div>
+    {/if}
+    {if $_W['_config']['smsswitch']}
+    <div class="mui-input-row mui-help{php echo $profile['mobile']?'':' active';}"{if !empty($profile['mobile'])} style="display:none"{/if}>
+        <label>验证码</label>
+        <input type="number" name="smscode" placeholder="验证码 (必填)" pattern="[0-9]*">
+        <div class="mui-help-info mui-text-right" style="padding-right:18px;"><a href="javascript:;" class="send_code" data-key="{$ii}">获取验证码</a></div>
+    </div>
+    {/if}
+{else}
+	{if $sysform['realname']['show']!='0'}
+    <div class="mui-input-row">
+        <label>{$sysform['realname']['title']}</label>
+        <input type="text" name="member_{$ii}[realname]" placeholder="{$sysform['realname']['title']} (必填)" value="">
+    </div>
+    {/if}
+    {if $sysform['mobile']['show']!='0'}
+    <div class="mui-input-row">
+        <label>{$sysform['mobile']['title']}</label>
+        <input type="number" name="member_{$ii}[mobile]" class="mobile" placeholder="{$sysform['mobile']['title']} (必填)" pattern="[0-9]*" value="" />
+    </div>
+    {/if}
+    {if $_W['_config']['smsswitch']}
+    <div class="mui-input-row mui-help active">
+        <label>验证码</label>
+        <input type="number" name="smscode" placeholder="验证码 (必填)" pattern="[0-9]*">
+        <div class="mui-help-info mui-text-right" style="padding-right:18px;"><a href="javascript:;" class="send_code" data-key="{$ii}">获取验证码</a></div>
+    </div>
+    {/if}
+{/if}

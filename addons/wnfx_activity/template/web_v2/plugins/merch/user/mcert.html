@@ -1,0 +1,90 @@
+{if empty($mcert) || $mcert['status']!=1}
+<div class="form-group">
+    <label class="col-lg control-label">是否通过</label>
+    <div class="col-sm-8 col-xs-12">
+    <label class="radio-inline">
+        <input type="radio" name="mcert[status]" value="1"{if $mcert['status']==1} checked="checked"{/if}> 通过
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="mcert[status]" value="2"{if $mcert['status']==2} checked="checked"{/if}> 驳回
+    </label>
+    </div>
+</div>
+{else}
+<div class="form-group">
+    <label class="col-lg control-label">认证状态</label>
+    <div class="col-sm-8 col-xs-12 form-control-static">
+		{if TIMESTAMP > $mcert['endtime']}<font color="#9b0101">认证[到期]</font>{else}<font color="green">认证[通过]</font>{/if}
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">到期时间</label>
+    <div class="col-sm-8 col-xs-12 form-control-static">
+		{php echo date('Y年m月d', $mcert['endtime']);}
+    </div>
+</div>
+{/if}
+<div class="form-group">
+    <label class="col-lg control-label">认证类型</label>
+    {if empty($mcert) || $mcert['status']!=1}
+    <div class="col-sm-8 col-xs-12">
+        <label class="radio-inline">
+            <input type="radio" name="mcert[type]" value="1" {if intval($mcert['type']) !=2}checked="checked"{/if} onclick="$('.company').hide();"> 个人认证
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="mcert[type]" value="2" {if intval($mcert['type']) ==2}checked="checked"{/if} onclick="$('.company').show();"> 企业认证
+        </label>
+    </div>
+    {else}
+    <div class="col-sm-8 col-xs-12 form-control-static">{if $mcert['type']==1}个人认证{else}企业认证{/if}</div>
+    {/if}
+</div>
+<div class="form-group company"{if $mcert['type']!=2} style="display:none"{/if}>
+    <label class="col-lg control-label">企业全称</label>
+    {if empty($mcert) || $mcert['status']!=1}
+    <div class="col-sm-8 col-xs-12">
+        <input type="text" name="mcert[detail][company]" class="form-control" placeholder="请输企业全称" value="{$mcert['detail']['company']}">
+    </div>
+    {else}
+    <div class="col-sm-8 col-xs-12 form-control-static">
+        {$mcert['detail']['company']}
+    </div>
+    {/if}
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">姓名（法人姓名）</label>
+    {if empty($mcert) || $mcert['status']!=1}
+    <div class="col-sm-8 col-xs-12">
+        <input type="text" name="mcert[detail][name]" class="form-control" placeholder="请输姓名（法人姓名）" value="{$mcert['detail']['name']}">
+    </div>
+    {else}
+    <div class="col-sm-8 col-xs-12 form-control-static">
+        {$mcert['detail']['name']}
+    </div>
+    {/if}
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">证件号码</label>
+    {if empty($mcert) || $mcert['status']!=1}
+    <div class="col-sm-8 col-xs-12">
+        <input type="text" name="mcert[detail][idcard]" class="form-control" placeholder="请输证件号码" value="{$mcert['detail']['idcard']}">
+    </div>
+    {else}
+    <div class="col-sm-8 col-xs-12 form-control-static">
+        {$mcert['detail']['idcard']}
+    </div>
+    {/if}
+</div>
+<div class="form-group">
+    <label class="col-lg control-label">相关证件图片<span class="help-block" style="padding-left:10px;font-size:12px;">PS：(身份证请上传反正面！)</span></label>
+    <div class="col-sm-8 col-xs-12">
+        {if empty($mcert) || $mcert['status']!=1}
+        {php echo tpl_form_field_multi_image('mcert[detail][thumb]', $mcert['detail']['thumb']);}
+        <span class="help-block">图片建议为200*200</span>
+        {else}
+        {loop $mcert['detail']['thumb'] $thumb}
+        <a href="{php echo tomedia($thumb);}" target="_blank"><img src="{php echo tomedia($thumb);}" height="100" style="margin:0 5px 5px 0;"></a>
+        {/loop}
+        {/if}
+    </div>
+</div>

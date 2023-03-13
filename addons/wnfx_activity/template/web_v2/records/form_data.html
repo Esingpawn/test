@@ -1,0 +1,60 @@
+<?php 
+$activity = model_activity::getSingleActivity($row['activityid'], '*');
+$forms = model_activity::getNumActivityForm($row['activityid']);
+$formdata = model_records::getNumFormData($row['id']);
+$formdata_common = Util::getSingelData('*', 'fx_form_data_common', array('rid'=>$row['id']));
+$formdata_common = empty($formdata_common)?m('member')->getMember($row['openid']):$formdata_common;
+$sysform  = $activity['form'];
+?>
+<ul style="width:100%">
+	{if !empty($sysform)}
+        {loop $sysform $k $v}
+            {if $v['show']=='' || $v['show']}
+                <li><div><span class="title">{$v['title']}：</span><span class="text">
+                {$formdata_common[$k]}</span></div></li>
+            {/if}
+        {/loop}
+    {/if}
+    {loop $forms[0] $form}
+    {if $form['fieldstype']!=''}
+    	<li><div><span class="title">{$form['title']}：</span><span class="text">
+        {if $form['fieldstype']=='gender'}
+            {php echo $formdata_common['gender']==0 ? '保密' :( $formdata_common['gender']==1?'男':'女')}
+        {elseif $form['fieldstype']=='age'}
+            {$formdata_common['age']} 岁
+        {elseif $form['fieldstype']=='birthyear'}
+             {php echo $formdata_common['birthyear'].'年'.$formdata_common['birthmonth'].'月'.$formdata_common['birthday'].'日'}
+        {elseif $form['fieldstype']=='resideprovince'}
+            {$formdata_common['resideprovince']}{$formdata_common['residecity']}{$formdata_common['residedist']} 
+        {else}
+        	{$formdata_common[$form['fieldstype']]}
+        {/if}</span></div></li>
+    {/if}
+    {/loop}
+    {loop $formdata $k $data}
+    {php $form = model_activity::getSingleActivityForm($data['formid']);}
+    {if !empty($form)}
+    	<li><div><span class="title">{$form['title']}：</span><span class="text">
+        {if ($form['displaytype']==5 || $form['displaytype']==6) && $data['data']!=''}
+            {php $pics = explode(',',$data['data']);}
+            {loop $pics $v}
+            <a href="{php echo tomedia($v)}" target="_blank"><img src="{php echo tomedia($v);}" height="65" style="margin:0 5px 5px 0;"></a>
+            {/loop}
+        {elseif $form['displaytype']==7}
+        	{php echo str_replace(',','-',$data['data'])}
+        {elseif $form['displaytype']==12}
+            {if !empty($data['data'])}<a class="btn btn-primary btn-xs" href="{php echo tomedia($data['data'])}" target="_blank">播放</a>{/if}
+        {else}
+        	{php echo str_replace(',',' ',$data['data'])}
+        {/if}</span></div></li>
+    {/if}
+    {/loop}
+    <li>
+        <span class="title">规格：</span>
+        <span class="text">{$row['optionname']}</span>
+    </li>
+    <li>
+        <span class="title">留言：</span>
+        <span class="text">{$row['msg']}</span>
+    </li>
+</ul>
